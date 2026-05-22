@@ -1,11 +1,11 @@
-import { FormEvent } from "react";
+import { type SubmitEvent } from "react";
 
 interface StudyImportSearchFormProps {
 	query: string;
 	isSearching: boolean;
 	errorMessage: string | null;
 	onQueryChange: (value: string) => void;
-	onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+	onSubmit: (event: SubmitEvent<HTMLFormElement>) => void;
 }
 
 export function StudyImportSearchForm({

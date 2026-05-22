@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 import { SearchResultsPanel } from "@/components/study-import/SearchResultsPanel";
 import { StudyImportHeader } from "@/components/study-import/StudyImportHeader";
 import { StudyImportSearchForm } from "@/components/study-import/StudyImportSearchForm";
@@ -24,9 +24,16 @@ export function StudyImportView() {
 	const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 	const [isImporting, setIsImporting] = useState(false);
 	const [importedStudyId, setImportedStudyId] = useState<string | null>(null);
+	const [importStatusMessage, setImportStatusMessage] = useState<string | null>(
+		null,
+	);
+	const [importStatus, setImportStatus] = useState<
+		"created" | "updated" | null
+	>(null);
+	const [demoDataCreated, setDemoDataCreated] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	async function handleSearch(event: FormEvent<HTMLFormElement>) {
+	async function handleSearch(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		if (!query.trim()) {
@@ -39,6 +46,9 @@ export function StudyImportView() {
 			setErrorMessage(null);
 			setSelectedStudy(null);
 			setImportedStudyId(null);
+			setImportStatusMessage(null);
+			setImportStatus(null);
+			setDemoDataCreated(false);
 
 			const response = await searchClinicalTrials(query.trim(), 10);
 			setResults(response.results);
@@ -55,6 +65,9 @@ export function StudyImportView() {
 			setIsLoadingDetail(true);
 			setErrorMessage(null);
 			setImportedStudyId(null);
+			setImportStatusMessage(null);
+			setImportStatus(null);
+			setDemoDataCreated(false);
 
 			const detail = await getClinicalTrialDetail(nctId);
 			setSelectedStudy(detail);
@@ -75,17 +88,19 @@ export function StudyImportView() {
 		try {
 			setIsImporting(true);
 			setErrorMessage(null);
+			setImportStatusMessage(null);
+			setImportStatus(null);
+			setDemoDataCreated(false);
 
-			const importedStudy = await importClinicalTrialToSupabase(
-				selectedStudy.nctId,
-			);
+			const response = await importClinicalTrialToSupabase(selectedStudy.nctId);
 
-			setImportedStudyId(importedStudy.studyId);
+			setImportedStudyId(response.study.studyId);
+			setImportStatus(response.status);
+			setImportStatusMessage(response.message);
+			setDemoDataCreated(response.demoDataCreated);
 		} catch (error) {
 			console.error(error);
-			setErrorMessage(
-				`Failed to import ${selectedStudy.nctId} into Supabase.`,
-			);
+			setErrorMessage(`Failed to import ${selectedStudy.nctId} into Supabase.`);
 		} finally {
 			setIsImporting(false);
 		}
@@ -117,6 +132,9 @@ export function StudyImportView() {
 						isLoadingDetail={isLoadingDetail}
 						isImporting={isImporting}
 						importedStudyId={importedStudyId}
+						importStatus={importStatus}
+						importStatusMessage={importStatusMessage}
+						demoDataCreated={demoDataCreated}
 						onImportStudy={handleImportStudy}
 					/>
 				</section>

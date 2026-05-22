@@ -9,6 +9,9 @@ interface StudyPreviewPanelProps {
 	isLoadingDetail: boolean;
 	isImporting: boolean;
 	importedStudyId: string | null;
+	importStatus: "created" | "updated" | null;
+	importStatusMessage: string | null;
+	demoDataCreated: boolean;
 	onImportStudy: () => void;
 }
 
@@ -17,6 +20,9 @@ export function StudyPreviewPanel({
 	isLoadingDetail,
 	isImporting,
 	importedStudyId,
+	importStatus,
+	importStatusMessage,
+	demoDataCreated,
 	onImportStudy,
 }: StudyPreviewPanelProps) {
 	return (
@@ -84,24 +90,56 @@ export function StudyPreviewPanel({
 							/>
 						)}
 
-						<div className="flex flex-wrap gap-3">
-							<button
-								type="button"
-								onClick={onImportStudy}
-								disabled={isImporting}
-								className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
-							>
-								{isImporting ? "Importing..." : "Import to Supabase"}
-							</button>
-
-							{importedStudyId && (
-								<Link
-									href={`/studies/${importedStudyId}`}
-									className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+						<div className="space-y-3">
+							{importStatusMessage && (
+								<div
+									className={`rounded-xl border px-4 py-3 text-sm ${
+										importStatus === "created"
+											? "border-emerald-200 bg-emerald-50 text-emerald-700"
+											: "border-blue-200 bg-blue-50 text-blue-700"
+									}`}
 								>
-									View Imported Study
-								</Link>
+									<p className="font-semibold">
+										{importStatus === "created" ? "Created" : "Updated"}
+									</p>
+									<p className="mt-1">{importStatusMessage}</p>
+
+									{demoDataCreated && (
+										<p className="mt-2 text-xs">
+											Synthetic demo sites and monitoring metrics are available
+											for the risk dashboard.
+										</p>
+									)}
+								</div>
 							)}
+							<div className="flex flex-wrap gap-3">
+								<button
+									type="button"
+									onClick={onImportStudy}
+									disabled={isImporting}
+									className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+								>
+									{isImporting ? "Importing..." : "Import to Supabase"}
+								</button>
+
+								{importedStudyId && (
+									<>
+										<Link
+											href={`/studies/${importedStudyId}`}
+											className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+										>
+											View Imported Study
+										</Link>
+
+										<Link
+											href={`/studies/${importedStudyId}/risk-dashboard`}
+											className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+										>
+											View Risk Dashboard
+										</Link>
+									</>
+								)}
+							</div>
 						</div>
 					</div>
 				)}

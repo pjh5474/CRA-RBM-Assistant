@@ -1,3 +1,5 @@
+import { StudyDetail } from "./study";
+
 export interface ClinicalTrialSearchItem {
 	nctId: string;
 	title: string;
@@ -28,4 +30,11 @@ export interface ClinicalTrialDetail {
 	primaryOutcomes: string[];
 	secondaryOutcomes: string[];
 	eligibilityCriteria?: string | null;
+}
+
+export interface ImportClinicalTrialResponse {
+	status: "created" | "updated";
+	message: string;
+	demoDataCreated: boolean;
+	study: StudyDetail;
 }
