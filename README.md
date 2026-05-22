@@ -180,3 +180,90 @@ Planned improvements include:
 - Delegation log and training log consistency check
 - n8n-based high-risk site alert workflow
 - LLM-assisted CRA action item generation
+
+## 11. Current MVP Status
+
+The current MVP includes:
+
+- Study list and study overview page
+- SIV and IMV checklist display
+- Site-level risk score calculation
+- Site risk dashboard
+- CRA follow-up action item recommendations
+- FastAPI backend API
+- Next.js frontend dashboard
+- JSON-based sample and synthetic monitoring data
+
+## 12. API Endpoints
+
+### Study APIs
+
+| Method | Endpoint                             | Description                           |
+| ------ | ------------------------------------ | ------------------------------------- |
+| GET    | /api/studies                         | Get all sample studies                |
+| GET    | /api/studies/{study_id}              | Get study detail                      |
+| GET    | /api/studies/{study_id}/sites        | Get sites for a study                 |
+| GET    | /api/studies/{study_id}/risk-sites   | Get sites with calculated risk scores |
+| GET    | /api/studies/{study_id}/action-items | Get CRA follow-up action items        |
+
+### Checklist APIs
+
+| Method | Endpoint            | Description                 |
+| ------ | ------------------- | --------------------------- |
+| GET    | /api/checklists     | Get all checklist templates |
+| GET    | /api/checklists/siv | Get SIV checklist           |
+| GET    | /api/checklists/imv | Get IMV checklist           |
+
+### Risk APIs
+
+| Method | Endpoint        | Description                             |
+| ------ | --------------- | --------------------------------------- |
+| GET    | /api/risk/sites | Get calculated risk score for all sites |
+
+## 13. How to Run Locally
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## Backend API documentation:
+
+http://localhost:8000/docs
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Environment Variables
+
+Create frontend/.env.local:
+
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+
+## 14. Screenshots
+
+### Study List
+
+![Study List](docs/images/study-list.png)
+
+### Study Overview
+
+![Study Overview](docs/images/study-overview.png)
+
+### Site Risk Dashboard
+
+![Site Risk Dashboard](docs/images/risk-dashboard.png)
+
+### CRA Action Items
+
+![CRA Action Items](docs/images/action-items.png)
