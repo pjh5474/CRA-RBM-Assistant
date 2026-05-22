@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 from fastapi import HTTPException
 
+from app.repositories.site_repository import get_sites_by_study_id_from_supabase
 from app.repositories.study_repository import (
     get_all_studies_from_supabase,
     get_study_by_id_from_supabase,
@@ -50,6 +51,9 @@ def get_study_by_id(study_id: str) -> Dict[str, Any]:
 
 def get_sites_by_study_id(study_id: str) -> List[Dict[str, Any]]:
     get_study_by_id(study_id)
+
+    if DATA_SOURCE == "supabase":
+        return get_sites_by_study_id_from_supabase(study_id)
 
     sites = load_json_file("data/synthetic-sites.json")
 

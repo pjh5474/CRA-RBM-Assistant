@@ -1,6 +1,14 @@
+import os
+
+from app.repositories.monitoring_metric_repository import (
+    get_all_monitoring_metrics_from_supabase,
+)
+
 from typing import Dict, List, Any
 
 from app.utils.data_loader import load_json_file
+
+DATA_SOURCE = os.getenv("DATA_SOURCE", "json")
 
 
 def calculate_open_query_score(open_queries: int) -> int:
@@ -129,5 +137,9 @@ def calculate_site_risk(metric: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def get_all_site_risks() -> List[Dict[str, Any]]:
-    monitoring_metrics = load_json_file("data/monitoring-metrics.json")
+    if DATA_SOURCE == "supabase":
+        monitoring_metrics = get_all_monitoring_metrics_from_supabase()
+    else:
+        monitoring_metrics = load_json_file("data/monitoring-metrics.json")
+
     return [calculate_site_risk(metric) for metric in monitoring_metrics]
