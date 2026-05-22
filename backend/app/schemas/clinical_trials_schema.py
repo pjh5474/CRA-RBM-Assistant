@@ -1,6 +1,8 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+from app.schemas.study_schema import StudyDetailResponse
+
 
 class ClinicalTrialSearchItem(BaseModel):
     nctId: str
@@ -32,3 +34,10 @@ class ClinicalTrialDetailResponse(BaseModel):
     primaryOutcomes: List[str] = []
     secondaryOutcomes: List[str] = []
     eligibilityCriteria: Optional[str] = None
+
+
+class ImportClinicalTrialResponse(BaseModel):
+    status: str
+    message: str
+    demoDataCreated: bool
+    study: StudyDetailResponse

@@ -60,6 +60,20 @@ def get_study_by_id_from_supabase(study_id: str) -> Dict[str, Any] | None:
     return to_camel_case_study(response.data[0])
 
 
+def study_exists_in_supabase(study_id: str) -> bool:
+    supabase = get_supabase_client()
+
+    response = (
+        supabase.table("studies")
+        .select("study_id")
+        .eq("study_id", study_id)
+        .limit(1)
+        .execute()
+    )
+
+    return bool(response.data)
+
+
 def upsert_study_to_supabase(study: Dict[str, Any]) -> Dict[str, Any]:
     """
     Upsert one internal study object into Supabase studies table.

@@ -43,3 +43,37 @@ def get_monitoring_metrics_by_study_id_from_supabase(
     )
 
     return [to_camel_case_metric(row) for row in response.data]
+
+
+def upsert_monitoring_metrics_to_supabase(
+    metrics: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    if not metrics:
+        return []
+
+    supabase = get_supabase_client()
+
+    rows = [
+        {
+            "metric_id": metric["metricId"],
+            "site_id": metric["siteId"],
+            "study_id": metric["studyId"],
+            "open_queries": metric["openQueries"],
+            "query_aging_days": metric["queryAgingDays"],
+            "protocol_deviations": metric["protocolDeviations"],
+            "sae_reporting_delay_count": metric["saeReportingDelayCount"],
+            "missing_essential_documents": metric["missingEssentialDocuments"],
+            "ip_accountability_issues": metric["ipAccountabilityIssues"],
+            "icf_issues": metric["icfIssues"],
+            "last_monitoring_visit_date": metric["lastMonitoringVisitDate"],
+        }
+        for metric in metrics
+    ]
+
+    response = (
+        supabase.table("monitoring_metrics")
+        .upsert(rows, on_conflict="metric_id")
+        .execute()
+    )
+
+    return [to_camel_case_metric(row) for row in response.data]

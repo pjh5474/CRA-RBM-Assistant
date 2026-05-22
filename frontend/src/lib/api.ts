@@ -5,6 +5,7 @@ import { SiteActionItems } from "@/types/actionItem";
 import {
 	ClinicalTrialDetail,
 	ClinicalTrialSearchResponse,
+	ImportClinicalTrialResponse,
 } from "@/types/clinicalTrial";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -78,8 +79,8 @@ export function getClinicalTrialDetail(
 
 export function importClinicalTrialToSupabase(
 	nctId: string,
-): Promise<StudyDetail> {
-	return fetchApi<StudyDetail>(
+): Promise<ImportClinicalTrialResponse> {
+	return fetchApi<ImportClinicalTrialResponse>(
 		`/api/external/clinical-trials/${nctId}/import`,
 		{
 			method: "POST",

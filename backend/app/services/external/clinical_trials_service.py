@@ -2,7 +2,14 @@ from typing import Any, Dict, List
 
 import httpx
 from fastapi import HTTPException
-from app.repositories.study_repository import upsert_study_to_supabase
+
+from app.repositories.study_repository import (
+    study_exists_in_supabase,
+    upsert_study_to_supabase,
+)
+from app.services.demo_data_service import (
+    create_demo_operational_data_for_imported_study,
+)
 
 CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
@@ -273,9 +280,28 @@ def convert_clinical_trial_to_internal_study(
 async def import_clinical_trial_to_supabase(nct_id: str) -> Dict[str, Any]:
     """
     Fetch ClinicalTrials.gov detail, convert it into internal Study format,
-    and upsert it into Supabase studies table.
+    upsert it into Supabase, and create synthetic demo operational data.
     """
+    existed_before_import = study_exists_in_supabase(nct_id)
+
     clinical_trial = await get_clinical_trial_detail(nct_id)
     internal_study = convert_clinical_trial_to_internal_study(clinical_trial)
 
-    return upsert_study_to_supabase(internal_study)
+    imported_study = upsert_study_to_supabase(internal_study)
+
+    demo_data_created = create_demo_operational_data_for_imported_study(imported_study)
+
+    status = "updated" if existed_before_import else "created"
+
+    message = (
+        "Study already existed and was updated with demo operational data."
+        if existed_before_import
+        else "Study imported successfully with demo operational data."
+    )
+
+    return {
+        "status": status,
+        "message": message,
+        "demoDataCreated": demo_data_created,
+        "study": imported_study,
+    }

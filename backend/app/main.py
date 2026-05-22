@@ -11,6 +11,12 @@ from app.schemas.study_schema import (
     StudySummaryResponse,
 )
 from app.schemas.action_item_schema import SiteActionItemsResponse
+from app.schemas.clinical_trials_schema import (
+    ClinicalTrialDetailResponse,
+    ClinicalTrialSearchResponse,
+    ImportClinicalTrialResponse,
+)
+
 from app.services.action_item_service import get_action_items_by_study_id
 from app.services.checklist_service import (
     get_all_checklists,
@@ -24,10 +30,7 @@ from app.services.study_service import (
     get_study_by_id,
     get_risk_sites_by_study_id,
 )
-from app.schemas.clinical_trials_schema import (
-    ClinicalTrialDetailResponse,
-    ClinicalTrialSearchResponse,
-)
+
 from app.services.external.clinical_trials_service import (
     get_clinical_trial_detail,
     search_clinical_trials,
@@ -132,7 +135,7 @@ async def get_external_clinical_trial_detail(nct_id: str):
 
 @app.post(
     "/api/external/clinical-trials/{nct_id}/import",
-    response_model=StudyDetailResponse,
+    response_model=ImportClinicalTrialResponse,
 )
 async def import_external_clinical_trial(nct_id: str):
     return await import_clinical_trial_to_supabase(nct_id)
