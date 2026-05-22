@@ -1,12 +1,21 @@
+import os
 from typing import Any, Dict, List
 
 from fastapi import HTTPException
 
-from app.services.risk_scoring_service import get_all_site_risks
+from app.repositories.study_repository import (
+    get_all_studies_from_supabase,
+    get_study_by_id_from_supabase,
+)
 from app.utils.data_loader import load_json_file
+
+DATA_SOURCE = os.getenv("DATA_SOURCE", "json")
 
 
 def get_all_studies() -> List[Dict[str, Any]]:
+    if DATA_SOURCE == "supabase":
+        return get_all_studies_from_supabase()
+
     studies = load_json_file("data/sample-studies.json")
 
     return [
@@ -22,6 +31,14 @@ def get_all_studies() -> List[Dict[str, Any]]:
 
 
 def get_study_by_id(study_id: str) -> Dict[str, Any]:
+    if DATA_SOURCE == "supabase":
+        study = get_study_by_id_from_supabase(study_id)
+
+        if study:
+            return study
+
+        raise HTTPException(status_code=404, detail=f"Study not found: {study_id}")
+
     studies = load_json_file("data/sample-studies.json")
 
     for study in studies:
@@ -40,10 +57,8 @@ def get_sites_by_study_id(study_id: str) -> List[Dict[str, Any]]:
 
 
 def get_risk_sites_by_study_id(study_id: str) -> List[Dict[str, Any]]:
-    """
-    Returns site information combined with calculated risk score for a specific study.
-    This endpoint is designed for the frontend Site Risk Dashboard.
-    """
+    from app.services.risk_scoring_service import get_all_site_risks
+
     sites = get_sites_by_study_id(study_id)
     site_risks = get_all_site_risks()
 
