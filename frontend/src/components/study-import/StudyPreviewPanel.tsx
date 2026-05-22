@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ListSection } from "@/components/study-import/ListSection";
 import { PreviewGrid } from "@/components/study-import/PreviewGrid";
 import { TextSection } from "@/components/study-import/TextSection";
@@ -6,11 +7,17 @@ import { ClinicalTrialDetail } from "@/types/clinicalTrial";
 interface StudyPreviewPanelProps {
 	selectedStudy: ClinicalTrialDetail | null;
 	isLoadingDetail: boolean;
+	isImporting: boolean;
+	importedStudyId: string | null;
+	onImportStudy: () => void;
 }
 
 export function StudyPreviewPanel({
 	selectedStudy,
 	isLoadingDetail,
+	isImporting,
+	importedStudyId,
+	onImportStudy,
 }: StudyPreviewPanelProps) {
 	return (
 		<section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -76,6 +83,26 @@ export function StudyPreviewPanel({
 								content={selectedStudy.eligibilityCriteria}
 							/>
 						)}
+
+						<div className="flex flex-wrap gap-3">
+							<button
+								type="button"
+								onClick={onImportStudy}
+								disabled={isImporting}
+								className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+							>
+								{isImporting ? "Importing..." : "Import to Supabase"}
+							</button>
+
+							{importedStudyId && (
+								<Link
+									href={`/studies/${importedStudyId}`}
+									className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+								>
+									View Imported Study
+								</Link>
+							)}
+						</div>
 					</div>
 				)}
 			</div>

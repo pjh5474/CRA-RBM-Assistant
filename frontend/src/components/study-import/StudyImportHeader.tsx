@@ -17,10 +17,9 @@ export function StudyImportHeader() {
 					Import Public Study Preview
 				</h1>
 				<p className="mt-3 max-w-4xl text-sm leading-6 text-slate-600">
-					Search public clinical trial registry data and preview structured
-					study information. This page currently supports search and preview
-					only. Importing selected studies into Supabase can be added in the
-					next step.
+					Search public clinical trial registry data, preview structured study
+					information, and import selected studies into Supabase for CRA
+					monitoring workflows.
 				</p>
 			</section>
 		</>

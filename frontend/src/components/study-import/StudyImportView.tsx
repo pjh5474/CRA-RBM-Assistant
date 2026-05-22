@@ -5,7 +5,11 @@ import { SearchResultsPanel } from "@/components/study-import/SearchResultsPanel
 import { StudyImportHeader } from "@/components/study-import/StudyImportHeader";
 import { StudyImportSearchForm } from "@/components/study-import/StudyImportSearchForm";
 import { StudyPreviewPanel } from "@/components/study-import/StudyPreviewPanel";
-import { getClinicalTrialDetail, searchClinicalTrials } from "@/lib/api";
+import {
+	getClinicalTrialDetail,
+	importClinicalTrialToSupabase,
+	searchClinicalTrials,
+} from "@/lib/api";
 import {
 	ClinicalTrialDetail,
 	ClinicalTrialSearchItem,
@@ -18,6 +22,8 @@ export function StudyImportView() {
 		useState<ClinicalTrialDetail | null>(null);
 	const [isSearching, setIsSearching] = useState(false);
 	const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+	const [isImporting, setIsImporting] = useState(false);
+	const [importedStudyId, setImportedStudyId] = useState<string | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	async function handleSearch(event: FormEvent<HTMLFormElement>) {
@@ -32,6 +38,7 @@ export function StudyImportView() {
 			setIsSearching(true);
 			setErrorMessage(null);
 			setSelectedStudy(null);
+			setImportedStudyId(null);
 
 			const response = await searchClinicalTrials(query.trim(), 10);
 			setResults(response.results);
@@ -47,6 +54,7 @@ export function StudyImportView() {
 		try {
 			setIsLoadingDetail(true);
 			setErrorMessage(null);
+			setImportedStudyId(null);
 
 			const detail = await getClinicalTrialDetail(nctId);
 			setSelectedStudy(detail);
@@ -55,6 +63,31 @@ export function StudyImportView() {
 			setErrorMessage(`Failed to load detail for ${nctId}.`);
 		} finally {
 			setIsLoadingDetail(false);
+		}
+	}
+
+	async function handleImportStudy() {
+		if (!selectedStudy) {
+			setErrorMessage("Please select a study before importing.");
+			return;
+		}
+
+		try {
+			setIsImporting(true);
+			setErrorMessage(null);
+
+			const importedStudy = await importClinicalTrialToSupabase(
+				selectedStudy.nctId,
+			);
+
+			setImportedStudyId(importedStudy.studyId);
+		} catch (error) {
+			console.error(error);
+			setErrorMessage(
+				`Failed to import ${selectedStudy.nctId} into Supabase.`,
+			);
+		} finally {
+			setIsImporting(false);
 		}
 	}
 
@@ -82,6 +115,9 @@ export function StudyImportView() {
 					<StudyPreviewPanel
 						selectedStudy={selectedStudy}
 						isLoadingDetail={isLoadingDetail}
+						isImporting={isImporting}
+						importedStudyId={importedStudyId}
+						onImportStudy={handleImportStudy}
 					/>
 				</section>
 			</div>
