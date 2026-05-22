@@ -7,6 +7,7 @@ from app.schemas.risk_schema import SiteRiskResponse
 from app.schemas.study_schema import (
     SiteResponse,
     StudyDetailResponse,
+    StudyRiskSiteResponse,
     StudySummaryResponse,
 )
 from app.services.checklist_service import (
@@ -19,6 +20,7 @@ from app.services.study_service import (
     get_all_studies,
     get_sites_by_study_id,
     get_study_by_id,
+    get_risk_sites_by_study_id,
 )
 
 app = FastAPI(
@@ -55,6 +57,13 @@ def get_study_sites(study_id: str):
 @app.get("/api/risk/sites", response_model=List[SiteRiskResponse])
 def get_site_risks():
     return get_all_site_risks()
+
+
+@app.get(
+    "/api/studies/{study_id}/risk-sites", response_model=List[StudyRiskSiteResponse]
+)
+def get_study_risk_sites(study_id: str):
+    return get_risk_sites_by_study_id(study_id)
 
 
 @app.get("/api/checklists", response_model=ChecklistResponse)

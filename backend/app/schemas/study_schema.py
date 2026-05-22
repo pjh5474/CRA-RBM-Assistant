@@ -36,3 +36,18 @@ class SiteResponse(BaseModel):
     activationDate: str
     targetEnrollment: int
     currentEnrollment: int
+
+
+class StudyRiskSiteResponse(BaseModel):
+    siteId: str
+    studyId: str
+    siteName: str
+    principalInvestigator: str
+    country: str
+    status: str
+    activationDate: str
+    targetEnrollment: int
+    currentEnrollment: int
+    riskScore: int
+    riskLevel: str
+    riskFactors: List[str]
