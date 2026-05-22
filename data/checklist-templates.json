@@ -1,0 +1,86 @@
+{
+	"sivChecklist": [
+		{
+			"category": "Essential Documents",
+			"item": "Confirm IRB approval letter and approved protocol version.",
+			"rationale": "To ensure that the site is using the currently approved protocol before study initiation."
+		},
+		{
+			"category": "Essential Documents",
+			"item": "Confirm investigator CV and GCP training certificate.",
+			"rationale": "To verify investigator qualification and GCP training status."
+		},
+		{
+			"category": "Delegation and Training",
+			"item": "Review delegation log and confirm that study responsibilities are appropriately assigned.",
+			"rationale": "To ensure that delegated tasks are performed only by qualified and authorized site staff."
+		},
+		{
+			"category": "Training",
+			"item": "Confirm completion of protocol training for site staff.",
+			"rationale": "To reduce protocol deviation risk and ensure consistent study conduct."
+		},
+		{
+			"category": "Informed Consent",
+			"item": "Confirm that the site has the latest IRB-approved informed consent form.",
+			"rationale": "To ensure that subjects are consented using the appropriate version."
+		},
+		{
+			"category": "Investigational Product",
+			"item": "Confirm IP storage condition, receipt process, and accountability log preparation.",
+			"rationale": "To ensure proper IP management and traceability."
+		},
+		{
+			"category": "Safety",
+			"item": "Confirm AE and SAE reporting process, including reporting timeline and contact information.",
+			"rationale": "To prevent delayed safety reporting and ensure subject safety oversight."
+		},
+		{
+			"category": "Data Management",
+			"item": "Confirm EDC access and eCRF completion guidelines.",
+			"rationale": "To support timely and accurate data entry."
+		}
+	],
+	"imvChecklist": [
+		{
+			"category": "Informed Consent",
+			"item": "Verify signed ICF version, signature date, and consent process documentation.",
+			"rationale": "To confirm that informed consent was obtained before any study-specific procedure."
+		},
+		{
+			"category": "Eligibility",
+			"item": "Verify inclusion and exclusion criteria against source documents.",
+			"rationale": "To confirm that enrolled subjects meet protocol eligibility requirements."
+		},
+		{
+			"category": "Source Data Verification",
+			"item": "Compare key source data with eCRF entries for primary endpoint-related data.",
+			"rationale": "To ensure data integrity for critical efficacy assessments."
+		},
+		{
+			"category": "Safety",
+			"item": "Review AE and SAE documentation and confirm reporting timeline compliance.",
+			"rationale": "To ensure complete and timely safety reporting."
+		},
+		{
+			"category": "Protocol Deviation",
+			"item": "Review visit window compliance and missing assessment records.",
+			"rationale": "To identify protocol deviations and support corrective actions."
+		},
+		{
+			"category": "Investigational Product",
+			"item": "Review IP dispensing, return, storage temperature, and accountability records.",
+			"rationale": "To ensure accurate IP accountability and compliance with storage requirements."
+		},
+		{
+			"category": "Query Management",
+			"item": "Review open queries and query aging status with site staff.",
+			"rationale": "To support timely query resolution and improve data quality."
+		},
+		{
+			"category": "Essential Documents",
+			"item": "Reconcile site file documents with expected essential document list.",
+			"rationale": "To support inspection readiness."
+		}
+	]
+}

@@ -1,0 +1,57 @@
+[
+	{
+		"siteId": "SITE-001",
+		"studyId": "STUDY-T2D-001",
+		"siteName": "Seoul Medical Center",
+		"principalInvestigator": "Dr. Kim",
+		"country": "Korea",
+		"status": "Active",
+		"activationDate": "2026-03-01",
+		"targetEnrollment": 20,
+		"currentEnrollment": 12
+	},
+	{
+		"siteId": "SITE-002",
+		"studyId": "STUDY-T2D-001",
+		"siteName": "Busan Clinical Trial Center",
+		"principalInvestigator": "Dr. Lee",
+		"country": "Korea",
+		"status": "Active",
+		"activationDate": "2026-03-10",
+		"targetEnrollment": 15,
+		"currentEnrollment": 5
+	},
+	{
+		"siteId": "SITE-003",
+		"studyId": "STUDY-T2D-001",
+		"siteName": "Incheon University Hospital",
+		"principalInvestigator": "Dr. Park",
+		"country": "Korea",
+		"status": "Active",
+		"activationDate": "2026-03-15",
+		"targetEnrollment": 18,
+		"currentEnrollment": 16
+	},
+	{
+		"siteId": "SITE-004",
+		"studyId": "STUDY-ONC-002",
+		"siteName": "Seoul Oncology Hospital",
+		"principalInvestigator": "Dr. Choi",
+		"country": "Korea",
+		"status": "Active",
+		"activationDate": "2026-02-20",
+		"targetEnrollment": 10,
+		"currentEnrollment": 4
+	},
+	{
+		"siteId": "SITE-005",
+		"studyId": "STUDY-ONC-002",
+		"siteName": "Daegu Cancer Center",
+		"principalInvestigator": "Dr. Jung",
+		"country": "Korea",
+		"status": "Active",
+		"activationDate": "2026-02-25",
+		"targetEnrollment": 8,
+		"currentEnrollment": 7
+	}
+]

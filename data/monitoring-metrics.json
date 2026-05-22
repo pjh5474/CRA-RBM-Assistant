@@ -1,0 +1,67 @@
+[
+	{
+		"metricId": "METRIC-001",
+		"siteId": "SITE-001",
+		"studyId": "STUDY-T2D-001",
+		"openQueries": 4,
+		"queryAgingDays": 3,
+		"protocolDeviations": 1,
+		"saeReportingDelayCount": 0,
+		"missingEssentialDocuments": 0,
+		"ipAccountabilityIssues": 0,
+		"icfIssues": 0,
+		"lastMonitoringVisitDate": "2026-04-15"
+	},
+	{
+		"metricId": "METRIC-002",
+		"siteId": "SITE-002",
+		"studyId": "STUDY-T2D-001",
+		"openQueries": 16,
+		"queryAgingDays": 15,
+		"protocolDeviations": 4,
+		"saeReportingDelayCount": 1,
+		"missingEssentialDocuments": 2,
+		"ipAccountabilityIssues": 1,
+		"icfIssues": 1,
+		"lastMonitoringVisitDate": "2026-04-10"
+	},
+	{
+		"metricId": "METRIC-003",
+		"siteId": "SITE-003",
+		"studyId": "STUDY-T2D-001",
+		"openQueries": 8,
+		"queryAgingDays": 7,
+		"protocolDeviations": 2,
+		"saeReportingDelayCount": 0,
+		"missingEssentialDocuments": 1,
+		"ipAccountabilityIssues": 0,
+		"icfIssues": 0,
+		"lastMonitoringVisitDate": "2026-04-18"
+	},
+	{
+		"metricId": "METRIC-004",
+		"siteId": "SITE-004",
+		"studyId": "STUDY-ONC-002",
+		"openQueries": 12,
+		"queryAgingDays": 11,
+		"protocolDeviations": 3,
+		"saeReportingDelayCount": 1,
+		"missingEssentialDocuments": 1,
+		"ipAccountabilityIssues": 0,
+		"icfIssues": 0,
+		"lastMonitoringVisitDate": "2026-04-12"
+	},
+	{
+		"metricId": "METRIC-005",
+		"siteId": "SITE-005",
+		"studyId": "STUDY-ONC-002",
+		"openQueries": 3,
+		"queryAgingDays": 2,
+		"protocolDeviations": 0,
+		"saeReportingDelayCount": 0,
+		"missingEssentialDocuments": 0,
+		"ipAccountabilityIssues": 0,
+		"icfIssues": 0,
+		"lastMonitoringVisitDate": "2026-04-20"
+	}
+]

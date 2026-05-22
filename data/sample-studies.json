@@ -1,0 +1,202 @@
+[
+	{
+		"studyId": "STUDY-T2D-001",
+		"title": "A Phase 3 Randomized, Double-Blind, Placebo-Controlled Study to Evaluate the Efficacy and Safety of Drug A in Adults with Type 2 Diabetes Mellitus",
+		"phase": "Phase 3",
+		"indication": "Type 2 Diabetes Mellitus",
+		"sponsor": "Synthetic Pharma Inc.",
+		"studyDesign": {
+			"type": "Interventional",
+			"allocation": "Randomized",
+			"masking": "Double-blind",
+			"control": "Placebo-controlled",
+			"model": "Parallel assignment"
+		},
+		"intervention": {
+			"investigationalProduct": "Drug A",
+			"comparator": "Placebo",
+			"route": "Oral",
+			"dose": "10 mg once daily",
+			"treatmentDuration": "24 weeks"
+		},
+		"population": {
+			"targetPopulation": "Adults with Type 2 Diabetes Mellitus",
+			"plannedEnrollment": 180,
+			"ageRange": "19 to 75 years"
+		},
+		"endpoints": {
+			"primaryEndpoint": "Change from baseline in HbA1c at Week 24",
+			"secondaryEndpoints": [
+				"Change from baseline in fasting plasma glucose at Week 24",
+				"Proportion of subjects achieving HbA1c less than 7.0%",
+				"Incidence of treatment-emergent adverse events"
+			]
+		},
+		"eligibilityCriteria": {
+			"inclusion": [
+				"Male or female subjects aged 19 to 75 years",
+				"Diagnosed with Type 2 Diabetes Mellitus at least 6 months before screening",
+				"HbA1c between 7.0% and 10.5% at screening",
+				"Able and willing to provide written informed consent"
+			],
+			"exclusion": [
+				"History of Type 1 Diabetes Mellitus",
+				"Use of prohibited antidiabetic medication within 12 weeks before screening",
+				"Severe renal impairment",
+				"Participation in another clinical trial within 30 days before screening"
+			]
+		},
+		"visitSchedule": [
+			{
+				"visit": "Screening",
+				"window": "Day -28 to Day -1",
+				"keyAssessments": [
+					"Informed consent",
+					"Eligibility assessment",
+					"Medical history",
+					"Laboratory tests"
+				]
+			},
+			{
+				"visit": "Baseline",
+				"window": "Day 1",
+				"keyAssessments": [
+					"Randomization",
+					"IP dispensing",
+					"HbA1c",
+					"AE assessment"
+				]
+			},
+			{
+				"visit": "Week 12",
+				"window": "±7 days",
+				"keyAssessments": [
+					"HbA1c",
+					"Fasting plasma glucose",
+					"AE assessment",
+					"IP accountability"
+				]
+			},
+			{
+				"visit": "Week 24",
+				"window": "±7 days",
+				"keyAssessments": [
+					"Primary endpoint assessment",
+					"Laboratory tests",
+					"AE assessment",
+					"IP return"
+				]
+			}
+		],
+		"safetyReporting": {
+			"aeCollectionPeriod": "From informed consent to end of study",
+			"saeReportingTimeline": "Within 24 hours of site awareness",
+			"pregnancyReportingRequired": true
+		},
+		"craFocusAreas": [
+			"Eligibility source documentation",
+			"ICF version and signature date review",
+			"HbA1c source data and eCRF consistency",
+			"SAE reporting timeline compliance",
+			"IP accountability and storage condition review"
+		]
+	},
+	{
+		"studyId": "STUDY-ONC-002",
+		"title": "A Phase 2 Open-Label Study to Evaluate the Safety and Preliminary Efficacy of Drug B in Patients with Advanced Solid Tumors",
+		"phase": "Phase 2",
+		"indication": "Advanced Solid Tumors",
+		"sponsor": "Synthetic Oncology Ltd.",
+		"studyDesign": {
+			"type": "Interventional",
+			"allocation": "Non-randomized",
+			"masking": "Open-label",
+			"control": "Single-arm",
+			"model": "Single group assignment"
+		},
+		"intervention": {
+			"investigationalProduct": "Drug B",
+			"comparator": "None",
+			"route": "Intravenous",
+			"dose": "5 mg/kg every 2 weeks",
+			"treatmentDuration": "Until disease progression or unacceptable toxicity"
+		},
+		"population": {
+			"targetPopulation": "Patients with advanced solid tumors",
+			"plannedEnrollment": 60,
+			"ageRange": "19 years and older"
+		},
+		"endpoints": {
+			"primaryEndpoint": "Objective response rate according to RECIST v1.1",
+			"secondaryEndpoints": [
+				"Progression-free survival",
+				"Overall survival",
+				"Duration of response",
+				"Incidence of treatment-emergent adverse events"
+			]
+		},
+		"eligibilityCriteria": {
+			"inclusion": [
+				"Histologically confirmed advanced solid tumor",
+				"Measurable disease according to RECIST v1.1",
+				"ECOG performance status 0 or 1",
+				"Adequate organ function",
+				"Able and willing to provide written informed consent"
+			],
+			"exclusion": [
+				"Active uncontrolled infection",
+				"Untreated or symptomatic brain metastases",
+				"Prior treatment with the same drug class",
+				"Clinically significant cardiovascular disease"
+			]
+		},
+		"visitSchedule": [
+			{
+				"visit": "Screening",
+				"window": "Day -28 to Day -1",
+				"keyAssessments": [
+					"Informed consent",
+					"Tumor assessment",
+					"Eligibility assessment",
+					"Laboratory tests"
+				]
+			},
+			{
+				"visit": "Cycle 1 Day 1",
+				"window": "Day 1",
+				"keyAssessments": [
+					"IP administration",
+					"Vital signs",
+					"AE assessment",
+					"Concomitant medication review"
+				]
+			},
+			{
+				"visit": "Every 2 weeks",
+				"window": "±3 days",
+				"keyAssessments": [
+					"IP administration",
+					"Safety laboratory tests",
+					"AE assessment"
+				]
+			},
+			{
+				"visit": "Every 8 weeks",
+				"window": "±7 days",
+				"keyAssessments": ["Tumor assessment", "RECIST evaluation"]
+			}
+		],
+		"safetyReporting": {
+			"aeCollectionPeriod": "From informed consent to 30 days after last dose",
+			"saeReportingTimeline": "Within 24 hours of site awareness",
+			"pregnancyReportingRequired": true
+		},
+		"craFocusAreas": [
+			"Tumor assessment schedule compliance",
+			"RECIST source documentation",
+			"SAE reporting timeline compliance",
+			"Drug administration record review",
+			"Concomitant medication and AE consistency"
+		]
+	}
+]
