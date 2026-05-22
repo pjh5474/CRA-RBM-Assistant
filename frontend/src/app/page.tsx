@@ -19,12 +19,18 @@ export default async function HomePage() {
 					Select a sample study to review structured protocol information, CRA
 					checklist items, and site-level risk indicators.
 				</p>
-				<div className="mt-5">
+				<div className="mt-5 flex gap-2">
 					<Link
 						href="/study-import"
 						className="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
 					>
 						Import Public Study
+					</Link>
+					<Link
+						href="/audit-logs"
+						className="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+					>
+						Audit Logs
 					</Link>
 				</div>
 			</section>

@@ -7,6 +7,7 @@ import {
 	ClinicalTrialSearchResponse,
 	ImportClinicalTrialResponse,
 } from "@/types/clinicalTrial";
+import { AuditLog } from "@/types/auditLog";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -85,5 +86,31 @@ export function importClinicalTrialToSupabase(
 		{
 			method: "POST",
 		},
+	);
+}
+
+export function getAuditLogs(params?: {
+	limit?: number;
+	tableName?: string;
+	action?: string;
+}): Promise<AuditLog[]> {
+	const searchParams = new URLSearchParams();
+
+	if (params?.limit) {
+		searchParams.set("limit", String(params.limit));
+	}
+
+	if (params?.tableName) {
+		searchParams.set("table_name", params.tableName);
+	}
+
+	if (params?.action) {
+		searchParams.set("action", params.action);
+	}
+
+	const queryString = searchParams.toString();
+
+	return fetchApi<AuditLog[]>(
+		`/api/audit-logs${queryString ? `?${queryString}` : ""}`,
 	);
 }

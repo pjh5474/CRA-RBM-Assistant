@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,7 +16,9 @@ from app.schemas.clinical_trials_schema import (
     ClinicalTrialSearchResponse,
     ImportClinicalTrialResponse,
 )
+from app.schemas.audit_log_schema import AuditLogResponse
 
+from app.services.audit_log_service import get_audit_logs
 from app.services.action_item_service import get_action_items_by_study_id
 from app.services.checklist_service import (
     get_all_checklists,
@@ -139,3 +141,16 @@ async def get_external_clinical_trial_detail(nct_id: str):
 )
 async def import_external_clinical_trial(nct_id: str):
     return await import_clinical_trial_to_supabase(nct_id)
+
+
+@app.get("/api/audit-logs", response_model=List[AuditLogResponse])
+def get_audit_log_list(
+    limit: int = 50,
+    table_name: Optional[str] = None,
+    action: Optional[str] = None,
+):
+    return get_audit_logs(
+        limit=limit,
+        table_name=table_name,
+        action=action,
+    )
