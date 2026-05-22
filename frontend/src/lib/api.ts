@@ -2,6 +2,10 @@ import { ChecklistItem } from "@/types/checklist";
 import { RiskSite } from "@/types/risk";
 import { StudyDetail, StudySummary } from "@/types/study";
 import { SiteActionItems } from "@/types/actionItem";
+import {
+	ClinicalTrialDetail,
+	ClinicalTrialSearchResponse,
+} from "@/types/clinicalTrial";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -47,4 +51,26 @@ export function getStudyActionItems(
 	studyId: string,
 ): Promise<SiteActionItems[]> {
 	return fetchApi<SiteActionItems[]>(`/api/studies/${studyId}/action-items`);
+}
+
+export function searchClinicalTrials(
+	query: string,
+	pageSize = 10,
+): Promise<ClinicalTrialSearchResponse> {
+	const searchParams = new URLSearchParams({
+		query,
+		page_size: String(pageSize),
+	});
+
+	return fetchApi<ClinicalTrialSearchResponse>(
+		`/api/external/clinical-trials/search?${searchParams.toString()}`,
+	);
+}
+
+export function getClinicalTrialDetail(
+	nctId: string,
+): Promise<ClinicalTrialDetail> {
+	return fetchApi<ClinicalTrialDetail>(
+		`/api/external/clinical-trials/${nctId}`,
+	);
 }
