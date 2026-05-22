@@ -78,6 +78,32 @@ Suggests follow-up actions based on detected site risks, such as:
 - Essential document reconciliation
 - Site staff retraining consideration
 
+### ClinicalTrials.gov Study Import
+
+Supports public clinical trial registry search and study preview using ClinicalTrials.gov API.
+
+Current features include:
+
+- Search public clinical studies by keyword
+- Preview NCT ID, title, phase, condition, intervention, study design, outcomes, and eligibility criteria
+- Import selected public study into Supabase PostgreSQL
+- Automatically generate synthetic demo sites and monitoring metrics for imported studies
+- Display imported studies in the existing Study Overview and Risk Dashboard workflow
+- Distinguish import status as created or updated
+
+### Trigger-based Audit-like Logs
+
+Implements a PostgreSQL trigger-based change log to demonstrate data change traceability.
+
+Tracked changes include:
+
+- Study insert/update/delete
+- Site insert/update/delete
+- Monitoring metric insert/update/delete
+- Old data and new data comparison using JSONB
+
+This feature is intended to demonstrate traceability concepts and is not a validated regulatory audit trail.
+
 ## 4. System Architecture
 
 Initial MVP architecture:
@@ -94,16 +120,34 @@ Checklist Generator
 ↓
 CRA Dashboard
 
-Planned Architecture:
+Current Architecture:
 Next.js Frontend
 ↓
 FastAPI Backend
 ↓
-MySQL Database
+Supabase PostgreSQL
 ↓
 Risk Scoring Service
 ↓
-n8n Workflow Automation
+CRA Dashboard
+
+External Registry Integration:
+Next.js Frontend
+↓
+FastAPI Backend
+↓
+Supabase PostgreSQL
+↓
+Risk Scoring Service
+↓
+CRA Dashboard
+
+Planned Automation Architecture:
+n8n Scheduled Workflow
+↓
+FastAPI Action Item API
+↓
+High-risk Site Alert
 
 ## 5. Data Sources
 
@@ -111,7 +155,11 @@ This project uses:
 
 - Manually created sample study data
 - Synthetic site monitoring data
-- Public clinical trial registry data in future versions
+- Supabase PostgreSQL data tables
+- Public clinical trial registry data from ClinicalTrials.gov API
+- Trigger-based audit-like logs for data change traceability
+
+No real subject data, real patient data, or confidential sponsor protocol is used.
 
 ## 6. MVP Scope
 
@@ -141,7 +189,7 @@ Risk level:
 - 3 to 5 points : Medium
 - 6 points or higher : High
 
-Detailed logic is descirbed in docs/risk-scoring-logic.md
+Detailed logic is described in docs/risk-scoring-logic.md
 
 ## 8. Tech Stack
 
@@ -152,7 +200,7 @@ Planned stack:
 - Database : Supabase PostgreSQL
 - Automation : n8n
 - Deployment: Docker, AWS or Vercel
-- Future AI Integration : LLM-based protocol summurization and checklist generation
+- Future AI Integration : LLM-based protocol summarization and checklist generation
 
 FastAPI is selected for rapid API development, clinical trial registry API integration, risk scoring logic, and future LLM-based document processing.
 
@@ -160,26 +208,29 @@ Supabase PostgreSQL is selected to provide a managed relational database for stu
 
 ## 9. Project Limitations
 
-This project is a prototype and has the following limitations
+This project is a prototype and has the following limitations.
 
 - It does not replace CRA judgement.
-- It does not provide regulatory or medical adivce.
+- It does not provide regulatory or medical advice.
 - It does not use real clinical trial subject data.
 - Risk scoring logic is simplified for demonstration.
-- Checklist generation is based on predefined rules and tmeplates in the MVP version.
-- This project is a portfolio prototype and does not implement validated clinical trial system requirements such as audit trail, electronic signature, system validation, or Part 11 compliance.
+- Checklist generation is based on predefined rules and templates in the MVP version.
+- This project includes a simplified trigger-based audit-like log for data change traceability, but it is not a validated audit trail.
+- This project does not implement validated clinical trial system requirements such as electronic signature, system validation, or 21 CFR Part 11 compliance.
 
 ## 10. Future Improvements
 
 Planned improvements include:
 
-- ClinicalTrials.gov API integration
+- Activity log frontend page with oldData/newData comparison
+- n8n-based high-risk site alert workflow
 - Protocol PDF upload and parsing
-- Protocal amendment comparison
+- Protocol amendment comparison
 - ICF version control check
 - Delegation log and training log consistency check
-- n8n-based high-risk site alert workflow
-- LLM-assisted CRA action item generation
+- LLM-assisted protocol summarization and CRA checklist generation
+- LLM-assisted monitoring focus area generation from imported public study data
+- Deployment with production environment configuration
 
 ## 11. Current MVP Status
 
@@ -190,9 +241,15 @@ The current MVP includes:
 - Site-level risk score calculation
 - Site risk dashboard
 - CRA follow-up action item recommendations
+- ClinicalTrials.gov study search and detail preview
+- Import selected public study into Supabase
+- Automatic synthetic demo site and monitoring metric generation for imported studies
+- Import status handling, created or updated
+- Trigger-based audit-like log for table-level data change traceability
 - FastAPI backend API
 - Next.js frontend dashboard
-- JSON-based sample and synthetic monitoring data
+- Supabase PostgreSQL database
+- JSON-based seed data and synthetic monitoring data
 
 ## 12. API Endpoints
 
@@ -220,6 +277,20 @@ The current MVP includes:
 | ------ | --------------- | --------------------------------------- |
 | GET    | /api/risk/sites | Get calculated risk score for all sites |
 
+### External Clinical Trial APIs
+
+| Method | Endpoint                                      | Description                                                          |
+| ------ | --------------------------------------------- | -------------------------------------------------------------------- |
+| GET    | /api/external/clinical-trials/search          | Search public studies from ClinicalTrials.gov                        |
+| GET    | /api/external/clinical-trials/{nct_id}        | Get public study detail by NCT ID                                    |
+| POST   | /api/external/clinical-trials/{nct_id}/import | Import public study into Supabase and generate demo operational data |
+
+### Audit Log APIs
+
+| Method | Endpoint        | Description                              |
+| ------ | --------------- | ---------------------------------------- |
+| GET    | /api/audit-logs | Get trigger-based audit-like change logs |
+
 ## 13. How to Run Locally
 
 ### Backend
@@ -246,9 +317,23 @@ npm run dev
 
 ## Environment Variables
 
+### Backend Environment Variables
+
+Create `backend/.env`:
+
+```env
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_key
+DATA_SOURCE=supabase
+```
+
+### frontend Environment Variables
+
 Create frontend/.env.local:
 
+```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
 
 ## 14. Screenshots
 
@@ -267,3 +352,28 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ### CRA Action Items
 
 ![CRA Action Items](docs/images/action-items.png)
+
+## 15. Supabase Setup
+
+This project uses Supabase PostgreSQL for study, site, monitoring metric, checklist, and audit-like log data.
+
+Main tables:
+
+- studies
+- sites
+- monitoring_metrics
+- checklist_templates
+- audit_logs
+
+The initial seed data can be inserted using the backend seed script.
+
+```bash
+cd backend
+python scripts/seed_supabase.py
+```
+
+## 16. License
+
+This project is licensed under the MIT License.
+
+This project is a portfolio prototype and is not intended for real clinical trial operation, regulatory submission, or validated clinical system use.
