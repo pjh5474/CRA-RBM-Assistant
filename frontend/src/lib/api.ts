@@ -1,6 +1,7 @@
 import { ChecklistItem } from "@/types/checklist";
 import { RiskSite } from "@/types/risk";
 import { StudyDetail, StudySummary } from "@/types/study";
+import { SiteActionItems } from "@/types/actionItem";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -40,4 +41,10 @@ export function getSivChecklist(): Promise<ChecklistItem[]> {
 
 export function getImvChecklist(): Promise<ChecklistItem[]> {
 	return fetchApi<ChecklistItem[]>("/api/checklists/imv");
+}
+
+export function getStudyActionItems(
+	studyId: string,
+): Promise<SiteActionItems[]> {
+	return fetchApi<SiteActionItems[]>(`/api/studies/${studyId}/action-items`);
 }

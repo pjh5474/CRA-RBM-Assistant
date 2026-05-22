@@ -10,6 +10,8 @@ from app.schemas.study_schema import (
     StudyRiskSiteResponse,
     StudySummaryResponse,
 )
+from app.schemas.action_item_schema import SiteActionItemsResponse
+from app.services.action_item_service import get_action_items_by_study_id
 from app.services.checklist_service import (
     get_all_checklists,
     get_imv_checklist,
@@ -22,6 +24,7 @@ from app.services.study_service import (
     get_study_by_id,
     get_risk_sites_by_study_id,
 )
+
 
 app = FastAPI(
     title="CRA-RBM Assistant API",
@@ -74,6 +77,14 @@ def get_site_risks():
 )
 def get_study_risk_sites(study_id: str):
     return get_risk_sites_by_study_id(study_id)
+
+
+@app.get(
+    "/api/studies/{study_id}/action-items",
+    response_model=List[SiteActionItemsResponse],
+)
+def get_study_action_items(study_id: str):
+    return get_action_items_by_study_id(study_id)
 
 
 @app.get("/api/checklists", response_model=ChecklistResponse)

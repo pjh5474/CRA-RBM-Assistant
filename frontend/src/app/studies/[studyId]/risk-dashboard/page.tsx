@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BackLink } from "@/components/layout/BackLink";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { RiskSitesTable } from "@/components/risk/RiskSitesTable";
@@ -40,6 +41,15 @@ export default async function RiskDashboardPage({
 					Site-level risk indicators are calculated using synthetic monitoring
 					data for portfolio demonstration.
 				</p>
+
+				<div className="mt-6">
+					<Link
+						href={`/studies/${study.studyId}/action-items`}
+						className="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+					>
+						View CRA Action Items
+					</Link>
+				</div>
 			</section>
 
 			<section className="grid gap-4 md:grid-cols-3">

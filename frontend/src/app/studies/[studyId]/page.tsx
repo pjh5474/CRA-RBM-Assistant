@@ -52,12 +52,18 @@ export default async function StudyDetailPage({
 					/>
 				</div>
 
-				<div className="mt-6">
+				<div className="mt-6 flex flex-wrap gap-3">
 					<Link
 						href={`/studies/${study.studyId}/risk-dashboard`}
 						className="inline-flex rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
 					>
 						View Site Risk Dashboard
+					</Link>
+					<Link
+						href={`/studies/${study.studyId}/action-items`}
+						className="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+					>
+						View CRA Action Items
 					</Link>
 				</div>
 			</section>
