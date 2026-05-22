@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 
 import httpx
 from fastapi import HTTPException
+from app.repositories.study_repository import upsert_study_to_supabase
 
 CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
@@ -187,3 +188,94 @@ async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
 
     data = response.json()
     return _map_detail(data)
+
+
+def _join_or_default(values: List[str], default: str = "Not specified") -> str:
+    if not values:
+        return default
+
+    return ", ".join(values)
+
+
+def convert_clinical_trial_to_internal_study(
+    clinical_trial: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Convert ClinicalTrials.gov detail response into internal Study format.
+
+    This mapping is intentionally simplified for CRA-RBM Assistant MVP.
+    Some fields are stored as placeholders because public registry data
+    does not always contain protocol-level operational details.
+    """
+    nct_id = clinical_trial["nctId"]
+
+    phases = clinical_trial.get("phases", [])
+    conditions = clinical_trial.get("conditions", [])
+    interventions = clinical_trial.get("interventions", [])
+    primary_outcomes = clinical_trial.get("primaryOutcomes", [])
+    secondary_outcomes = clinical_trial.get("secondaryOutcomes", [])
+
+    return {
+        "studyId": nct_id,
+        "title": clinical_trial.get("title") or "Untitled clinical trial",
+        "phase": _join_or_default(phases),
+        "indication": _join_or_default(conditions),
+        "sponsor": "ClinicalTrials.gov Public Registry",
+        "studyDesign": {
+            "type": clinical_trial.get("studyType"),
+            "allocation": clinical_trial.get("allocation"),
+            "masking": clinical_trial.get("masking"),
+            "whoMasked": clinical_trial.get("whoMasked", []),
+            "registryStatus": clinical_trial.get("status"),
+            "source": "ClinicalTrials.gov",
+        },
+        "intervention": {
+            "interventions": interventions,
+            "investigationalProduct": interventions[0] if interventions else None,
+            "comparator": None,
+            "route": None,
+            "dose": None,
+            "treatmentDuration": None,
+        },
+        "population": {
+            "targetPopulation": _join_or_default(conditions),
+            "plannedEnrollment": None,
+            "ageRange": None,
+        },
+        "endpoints": {
+            "primaryEndpoint": (
+                primary_outcomes[0] if primary_outcomes else "Not specified"
+            ),
+            "primaryEndpoints": primary_outcomes,
+            "secondaryEndpoints": secondary_outcomes,
+        },
+        "eligibilityCriteria": {
+            "rawText": clinical_trial.get("eligibilityCriteria"),
+            "inclusion": [],
+            "exclusion": [],
+        },
+        "visitSchedule": [],
+        "safetyReporting": {
+            "aeCollectionPeriod": "Not specified in imported registry preview",
+            "saeReportingTimeline": "Not specified in imported registry preview",
+            "pregnancyReportingRequired": None,
+        },
+        "craFocusAreas": [
+            "Review registry information against protocol source document",
+            "Confirm eligibility criteria from approved protocol",
+            "Confirm endpoint-related source data requirements",
+            "Confirm safety reporting process from protocol and study manual",
+            "Confirm essential document readiness before site initiation",
+        ],
+    }
+
+
+async def import_clinical_trial_to_supabase(nct_id: str) -> Dict[str, Any]:
+    """
+    Fetch ClinicalTrials.gov detail, convert it into internal Study format,
+    and upsert it into Supabase studies table.
+    """
+    clinical_trial = await get_clinical_trial_detail(nct_id)
+    internal_study = convert_clinical_trial_to_internal_study(clinical_trial)
+
+    return upsert_study_to_supabase(internal_study)

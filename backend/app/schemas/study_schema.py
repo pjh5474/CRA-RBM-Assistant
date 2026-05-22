@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
 
@@ -8,6 +8,12 @@ class StudySummaryResponse(BaseModel):
     phase: str
     indication: str
     sponsor: str
+
+
+class EligibilityCriteriaResponse(BaseModel):
+    rawText: Optional[str] = None
+    inclusion: List[str] = []
+    exclusion: List[str] = []
 
 
 class StudyDetailResponse(BaseModel):
@@ -20,7 +26,7 @@ class StudyDetailResponse(BaseModel):
     intervention: Dict[str, Any]
     population: Dict[str, Any]
     endpoints: Dict[str, Any]
-    eligibilityCriteria: Dict[str, List[str]]
+    eligibilityCriteria: EligibilityCriteriaResponse
     visitSchedule: List[Dict[str, Any]]
     safetyReporting: Dict[str, Any]
     craFocusAreas: List[str]

@@ -32,7 +32,11 @@ from app.services.external.clinical_trials_service import (
     get_clinical_trial_detail,
     search_clinical_trials,
 )
-
+from app.services.external.clinical_trials_service import (
+    get_clinical_trial_detail,
+    import_clinical_trial_to_supabase,
+    search_clinical_trials,
+)
 
 app = FastAPI(
     title="CRA-RBM Assistant API",
@@ -124,3 +128,11 @@ async def search_external_clinical_trials(query: str, page_size: int = 10):
 )
 async def get_external_clinical_trial_detail(nct_id: str):
     return await get_clinical_trial_detail(nct_id)
+
+
+@app.post(
+    "/api/external/clinical-trials/{nct_id}/import",
+    response_model=StudyDetailResponse,
+)
+async def import_external_clinical_trial(nct_id: str):
+    return await import_clinical_trial_to_supabase(nct_id)
