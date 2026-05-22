@@ -24,6 +24,14 @@ from app.services.study_service import (
     get_study_by_id,
     get_risk_sites_by_study_id,
 )
+from app.schemas.clinical_trials_schema import (
+    ClinicalTrialDetailResponse,
+    ClinicalTrialSearchResponse,
+)
+from app.services.external.clinical_trials_service import (
+    get_clinical_trial_detail,
+    search_clinical_trials,
+)
 
 
 app = FastAPI(
@@ -100,3 +108,19 @@ def get_siv_checklists():
 @app.get("/api/checklists/imv", response_model=List[ChecklistItemResponse])
 def get_imv_checklists():
     return get_imv_checklist()
+
+
+@app.get(
+    "/api/external/clinical-trials/search",
+    response_model=ClinicalTrialSearchResponse,
+)
+async def search_external_clinical_trials(query: str, page_size: int = 10):
+    return await search_clinical_trials(query=query, page_size=page_size)
+
+
+@app.get(
+    "/api/external/clinical-trials/{nct_id}",
+    response_model=ClinicalTrialDetailResponse,
+)
+async def get_external_clinical_trial_detail(nct_id: str):
+    return await get_clinical_trial_detail(nct_id)
