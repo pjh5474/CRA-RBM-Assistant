@@ -61,35 +61,12 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 									)}
 								</td>
 								<td className="px-5 py-4">
-									<div className="flex flex-col gap-2">
-										<Link
-											href={`/studies/${site.studyId}/sites/${site.siteId}/monitoring-report`}
-											className="inline-flex rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
-										>
-											View Report Draft
-										</Link>
-
-										<Link
-											href={`/studies/${site.studyId}/sites/${site.siteId}/essential-documents`}
-											className="inline-flex rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-										>
-											View Essential Docs
-										</Link>
-
-										<Link
-											href={`/studies/${site.studyId}/sites/${site.siteId}/protocol-deviations`}
-											className="inline-flex rounded-lg border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 hover:bg-orange-100"
-										>
-											View Deviations
-										</Link>
-
-										<Link
-											href={`/studies/${site.studyId}/sites/${site.siteId}/icf-version-check`}
-											className="inline-flex rounded-lg border border-purple-300 bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-100"
-										>
-											View ICF Check
-										</Link>
-									</div>
+									<Link
+										href={`/studies/${site.studyId}/sites/${site.siteId}`}
+										className="inline-flex rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
+									>
+										Open Site Review
+									</Link>
 								</td>
 							</tr>
 						))}

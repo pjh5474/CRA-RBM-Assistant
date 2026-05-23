@@ -4,10 +4,12 @@ from app.schemas.essential_document_schema import EssentialDocumentReadinessResp
 from app.schemas.icf_schema import IcfVersionCheckResponse
 from app.schemas.monitoring_report_schema import MonitoringReportDraftResponse
 from app.schemas.protocol_deviation_schema import ProtocolDeviationSummaryResponse
+from app.schemas.site_review_schema import SiteReviewSummaryResponse
 from app.services.essential_document_service import get_essential_document_readiness
 from app.services.icf_service import get_icf_version_check
 from app.services.monitoring_report_service import get_monitoring_report_draft
 from app.services.protocol_deviation_service import get_protocol_deviation_summary
+from app.services.site_review_service import get_site_review_summary
 
 router = APIRouter(
     prefix="/api/studies/{study_id}/sites/{site_id}",
@@ -54,3 +56,11 @@ def get_site_icf_version_check(study_id: str, site_id: str):
         study_id=study_id,
         site_id=site_id,
     )
+
+
+@router.get(
+    "/review-summary",
+    response_model=SiteReviewSummaryResponse,
+)
+def get_site_review_summary_endpoint(study_id: str, site_id: str):
+    return get_site_review_summary(study_id=study_id, site_id=site_id)

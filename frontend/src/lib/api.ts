@@ -12,6 +12,7 @@ import { MonitoringReportDraft } from "@/types/monitoringReport";
 import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
 import { IcfVersionCheck } from "@/types/icf";
+import { SiteReviewSummary } from "@/types/siteReview";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -152,5 +153,14 @@ export function getIcfVersionCheck(
 ): Promise<IcfVersionCheck> {
 	return fetchApi<IcfVersionCheck>(
 		`/api/studies/${studyId}/sites/${siteId}/icf-version-check`,
+	);
+}
+
+export function getSiteReviewSummary(
+	studyId: string,
+	siteId: string,
+): Promise<SiteReviewSummary> {
+	return fetchApi<SiteReviewSummary>(
+		`/api/studies/${studyId}/sites/${siteId}/review-summary`,
 	);
 }
