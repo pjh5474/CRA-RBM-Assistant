@@ -11,6 +11,7 @@ import { AuditLog } from "@/types/auditLog";
 import { MonitoringReportDraft } from "@/types/monitoringReport";
 import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
+import { IcfVersionCheck } from "@/types/icf";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -142,5 +143,14 @@ export function getProtocolDeviationSummary(
 ): Promise<ProtocolDeviationSummary> {
 	return fetchApi<ProtocolDeviationSummary>(
 		`/api/studies/${studyId}/sites/${siteId}/protocol-deviations`,
+	);
+}
+
+export function getIcfVersionCheck(
+	studyId: string,
+	siteId: string,
+): Promise<IcfVersionCheck> {
+	return fetchApi<IcfVersionCheck>(
+		`/api/studies/${studyId}/sites/${siteId}/icf-version-check`,
 	);
 }

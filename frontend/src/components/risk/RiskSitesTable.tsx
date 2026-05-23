@@ -82,6 +82,13 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 										>
 											View Deviations
 										</Link>
+
+										<Link
+											href={`/studies/${site.studyId}/sites/${site.siteId}/icf-version-check`}
+											className="inline-flex rounded-lg border border-purple-300 bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-100"
+										>
+											View ICF Check
+										</Link>
 									</div>
 								</td>
 							</tr>
