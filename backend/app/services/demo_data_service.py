@@ -4,6 +4,9 @@ from app.repositories.monitoring_metric_repository import (
     upsert_monitoring_metrics_to_supabase,
 )
 from app.repositories.site_repository import upsert_sites_to_supabase
+from app.repositories.essential_document_repository import (
+    upsert_essential_documents_to_supabase,
+)
 
 
 def build_demo_sites_for_imported_study(study: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -97,16 +100,93 @@ def build_demo_monitoring_metrics_for_imported_study(
 def create_demo_operational_data_for_imported_study(
     study: Dict[str, Any],
 ) -> bool:
-    """
-    Create synthetic demo sites and monitoring metrics for imported public study.
-
-    This data is not real site performance data.
-    It is generated only to demonstrate the CRA-RBM dashboard workflow.
-    """
     demo_sites = build_demo_sites_for_imported_study(study)
     demo_metrics = build_demo_monitoring_metrics_for_imported_study(study)
 
     upsert_sites_to_supabase(demo_sites)
     upsert_monitoring_metrics_to_supabase(demo_metrics)
+    create_demo_essential_documents_for_imported_study(study)
+
+    return True
+
+
+ESSENTIAL_DOCUMENT_TYPES = [
+    "IRB Approval Letter",
+    "Approved Protocol",
+    "Approved ICF",
+    "Investigator CV",
+    "GCP Certificate",
+    "Delegation Log",
+    "Training Log",
+    "IP Accountability Log",
+]
+
+
+def build_demo_essential_documents_for_site(
+    study_id: str,
+    site_id: str,
+    site_index: int,
+) -> List[Dict[str, Any]]:
+    documents: List[Dict[str, Any]] = []
+
+    for index, document_type in enumerate(ESSENTIAL_DOCUMENT_TYPES, start=1):
+        status = "Ready"
+        comment = "Document confirmed as available for demo readiness review."
+
+        if site_index == 2 and document_type in [
+            "Delegation Log",
+            "IP Accountability Log",
+        ]:
+            status = "Missing"
+            comment = "Document is missing and requires CRA follow-up."
+
+        if site_index == 2 and document_type == "GCP Certificate":
+            status = "Expired"
+            comment = (
+                "GCP certificate is expired and requires updated training evidence."
+            )
+
+        if site_index == 3 and document_type == "Training Log":
+            status = "Pending"
+            comment = "Training log is pending final confirmation."
+
+        document_id = f"{site_id}-DOC-{index:03d}"
+
+        documents.append(
+            {
+                "documentId": document_id,
+                "studyId": study_id,
+                "siteId": site_id,
+                "documentType": document_type,
+                "required": True,
+                "status": status,
+                "version": "1.0" if status != "Missing" else None,
+                "documentDate": "2026-05-01" if status != "Missing" else None,
+                "expiryDate": "2026-05-15" if status == "Expired" else None,
+                "comment": comment,
+            }
+        )
+
+    return documents
+
+
+def create_demo_essential_documents_for_imported_study(
+    study: Dict[str, Any],
+) -> bool:
+    study_id = study["studyId"]
+
+    all_documents: List[Dict[str, Any]] = []
+
+    for site_index in range(1, 4):
+        site_id = f"{study_id}-SITE-{site_index:03d}"
+        all_documents.extend(
+            build_demo_essential_documents_for_site(
+                study_id=study_id,
+                site_id=site_id,
+                site_index=site_index,
+            )
+        )
+
+    upsert_essential_documents_to_supabase(all_documents)
 
     return True

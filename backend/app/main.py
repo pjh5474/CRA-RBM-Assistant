@@ -19,7 +19,14 @@ from app.schemas.clinical_trials_schema import (
 from app.schemas.audit_log_schema import AuditLogResponse
 from app.schemas.alert_schema import HighRiskSiteAlertResponse
 from app.schemas.monitoring_report_schema import MonitoringReportDraftResponse
+from app.schemas.essential_document_schema import (
+    EssentialDocumentReadinessResponse,
+)
 
+
+from app.services.essential_document_service import (
+    get_essential_document_readiness,
+)
 from app.services.monitoring_report_service import get_monitoring_report_draft
 from app.services.alert_service import get_high_risk_site_alerts
 from app.services.audit_log_service import get_audit_logs
@@ -174,3 +181,14 @@ def get_audit_log_list(
 )
 def get_high_risk_site_alert_list(include_medium: bool = True):
     return get_high_risk_site_alerts(include_medium=include_medium)
+
+
+@app.get(
+    "/api/studies/{study_id}/sites/{site_id}/essential-documents",
+    response_model=EssentialDocumentReadinessResponse,
+)
+def get_site_essential_document_readiness(study_id: str, site_id: str):
+    return get_essential_document_readiness(
+        study_id=study_id,
+        site_id=site_id,
+    )
