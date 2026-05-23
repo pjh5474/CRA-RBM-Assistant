@@ -10,6 +10,7 @@ import {
 import { AuditLog } from "@/types/auditLog";
 import { MonitoringReportDraft } from "@/types/monitoringReport";
 import { EssentialDocumentReadiness } from "@/types/essentialDocument";
+import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -132,5 +133,14 @@ export function getEssentialDocumentReadiness(
 ): Promise<EssentialDocumentReadiness> {
 	return fetchApi<EssentialDocumentReadiness>(
 		`/api/studies/${studyId}/sites/${siteId}/essential-documents`,
+	);
+}
+
+export function getProtocolDeviationSummary(
+	studyId: string,
+	siteId: string,
+): Promise<ProtocolDeviationSummary> {
+	return fetchApi<ProtocolDeviationSummary>(
+		`/api/studies/${studyId}/sites/${siteId}/protocol-deviations`,
 	);
 }

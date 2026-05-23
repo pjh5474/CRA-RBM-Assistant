@@ -75,6 +75,13 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 										>
 											View Essential Docs
 										</Link>
+
+										<Link
+											href={`/studies/${site.studyId}/sites/${site.siteId}/protocol-deviations`}
+											className="inline-flex rounded-lg border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 hover:bg-orange-100"
+										>
+											View Deviations
+										</Link>
 									</div>
 								</td>
 							</tr>
