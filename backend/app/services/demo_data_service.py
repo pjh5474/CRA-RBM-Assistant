@@ -7,6 +7,9 @@ from app.repositories.site_repository import upsert_sites_to_supabase
 from app.repositories.essential_document_repository import (
     upsert_essential_documents_to_supabase,
 )
+from app.repositories.protocol_deviation_repository import (
+    upsert_protocol_deviations_to_supabase,
+)
 
 
 def build_demo_sites_for_imported_study(study: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -106,6 +109,7 @@ def create_demo_operational_data_for_imported_study(
     upsert_sites_to_supabase(demo_sites)
     upsert_monitoring_metrics_to_supabase(demo_metrics)
     create_demo_essential_documents_for_imported_study(study)
+    create_demo_protocol_deviations_for_imported_study(study)
 
     return True
 
@@ -188,5 +192,79 @@ def create_demo_essential_documents_for_imported_study(
         )
 
     upsert_essential_documents_to_supabase(all_documents)
+
+    return True
+
+
+def build_demo_protocol_deviations_for_imported_study(
+    study: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    study_id = study["studyId"]
+
+    return [
+        {
+            "deviationId": f"{study_id}-SITE-002-DEV-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "subjectCode": "SUBJ-002-001",
+            "category": "Visit Window Deviation",
+            "severity": "Major",
+            "status": "Open",
+            "description": "The Week 12 visit was performed outside the allowed visit window.",
+            "detectedDate": "2026-05-12",
+            "rootCause": "Subject scheduling delay",
+            "correctiveAction": "Site documented the reason for the delayed visit and notified the CRA.",
+            "preventiveAction": "Site staff should review visit window requirements before scheduling future visits.",
+        },
+        {
+            "deviationId": f"{study_id}-SITE-002-DEV-002",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "subjectCode": "SUBJ-002-002",
+            "category": "Missing Assessment",
+            "severity": "Minor",
+            "status": "In Review",
+            "description": "A protocol-required assessment was not completed at the scheduled visit.",
+            "detectedDate": "2026-05-13",
+            "rootCause": "Assessment checklist was not reviewed before the visit.",
+            "correctiveAction": "Site is reviewing source documentation to confirm whether assessment can be completed or documented as missed.",
+            "preventiveAction": "Site staff should use the visit checklist before each subject visit.",
+        },
+        {
+            "deviationId": f"{study_id}-SITE-002-DEV-003",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "subjectCode": "SUBJ-002-003",
+            "category": "SAE Reporting Delay",
+            "severity": "Critical",
+            "status": "Open",
+            "description": "SAE reporting was delayed beyond the expected reporting timeline.",
+            "detectedDate": "2026-05-14",
+            "rootCause": "Site staff were unclear on immediate SAE reporting escalation process.",
+            "correctiveAction": "CRA should review SAE reporting process with site staff and confirm escalation contact information.",
+            "preventiveAction": "Safety reporting retraining should be considered for delegated site staff.",
+        },
+        {
+            "deviationId": f"{study_id}-SITE-003-DEV-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-003",
+            "subjectCode": "SUBJ-003-001",
+            "category": "Protocol Deviation Trend",
+            "severity": "Minor",
+            "status": "Resolved",
+            "description": "Minor documentation inconsistency was identified and resolved during monitoring review.",
+            "detectedDate": "2026-05-11",
+            "rootCause": "Source note template was inconsistently completed.",
+            "correctiveAction": "Site corrected the source note and filed clarification.",
+            "preventiveAction": "Site staff were reminded to complete source templates consistently.",
+        },
+    ]
+
+
+def create_demo_protocol_deviations_for_imported_study(
+    study: Dict[str, Any],
+) -> bool:
+    demo_deviations = build_demo_protocol_deviations_for_imported_study(study)
+    upsert_protocol_deviations_to_supabase(demo_deviations)
 
     return True

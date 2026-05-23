@@ -22,8 +22,13 @@ from app.schemas.monitoring_report_schema import MonitoringReportDraftResponse
 from app.schemas.essential_document_schema import (
     EssentialDocumentReadinessResponse,
 )
+from app.schemas.protocol_deviation_schema import (
+    ProtocolDeviationSummaryResponse,
+)
 
-
+from app.services.protocol_deviation_service import (
+    get_protocol_deviation_summary,
+)
 from app.services.essential_document_service import (
     get_essential_document_readiness,
 )
@@ -189,6 +194,17 @@ def get_high_risk_site_alert_list(include_medium: bool = True):
 )
 def get_site_essential_document_readiness(study_id: str, site_id: str):
     return get_essential_document_readiness(
+        study_id=study_id,
+        site_id=site_id,
+    )
+
+
+@app.get(
+    "/api/studies/{study_id}/sites/{site_id}/protocol-deviations",
+    response_model=ProtocolDeviationSummaryResponse,
+)
+def get_site_protocol_deviation_summary(study_id: str, site_id: str):
+    return get_protocol_deviation_summary(
         study_id=study_id,
         site_id=site_id,
     )
