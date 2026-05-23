@@ -10,6 +10,10 @@ from app.repositories.essential_document_repository import (
 from app.repositories.protocol_deviation_repository import (
     upsert_protocol_deviations_to_supabase,
 )
+from app.repositories.icf_repository import (
+    upsert_icf_versions_to_supabase,
+    upsert_subject_consents_to_supabase,
+)
 
 
 def build_demo_sites_for_imported_study(study: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -110,6 +114,7 @@ def create_demo_operational_data_for_imported_study(
     upsert_monitoring_metrics_to_supabase(demo_metrics)
     create_demo_essential_documents_for_imported_study(study)
     create_demo_protocol_deviations_for_imported_study(study)
+    create_demo_icf_data_for_imported_study(study)
 
     return True
 
@@ -266,5 +271,85 @@ def create_demo_protocol_deviations_for_imported_study(
 ) -> bool:
     demo_deviations = build_demo_protocol_deviations_for_imported_study(study)
     upsert_protocol_deviations_to_supabase(demo_deviations)
+
+    return True
+
+
+def build_demo_icf_versions_for_imported_study(
+    study: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    study_id = study["studyId"]
+
+    return [
+        {
+            "icfVersionId": f"{study_id}-ICF-V1",
+            "studyId": study_id,
+            "version": "1.0",
+            "irbApprovalDate": "2026-04-01",
+            "effectiveDate": "2026-04-05",
+            "status": "Superseded",
+        },
+        {
+            "icfVersionId": f"{study_id}-ICF-V2",
+            "studyId": study_id,
+            "version": "2.0",
+            "irbApprovalDate": "2026-05-01",
+            "effectiveDate": "2026-05-05",
+            "status": "Active",
+        },
+    ]
+
+
+def build_demo_subject_consents_for_imported_study(
+    study: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    study_id = study["studyId"]
+
+    return [
+        {
+            "consentId": f"{study_id}-SITE-001-CONSENT-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-001",
+            "subjectCode": "SUBJ-001-001",
+            "signedIcfVersion": "2.0",
+            "consentDate": "2026-05-10",
+            "consentProcessNote": "Consent version is consistent with active ICF.",
+        },
+        {
+            "consentId": f"{study_id}-SITE-002-CONSENT-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "subjectCode": "SUBJ-002-001",
+            "signedIcfVersion": "1.0",
+            "consentDate": "2026-05-10",
+            "consentProcessNote": "Subject signed outdated ICF version after v2.0 became effective.",
+        },
+        {
+            "consentId": f"{study_id}-SITE-002-CONSENT-002",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "subjectCode": "SUBJ-002-002",
+            "signedIcfVersion": "2.0",
+            "consentDate": "2026-05-12",
+            "consentProcessNote": "Consent version is consistent with active ICF.",
+        },
+        {
+            "consentId": f"{study_id}-SITE-003-CONSENT-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-003",
+            "subjectCode": "SUBJ-003-001",
+            "signedIcfVersion": "1.0",
+            "consentDate": "2026-04-20",
+            "consentProcessNote": "Consent version was valid before v2.0 effective date.",
+        },
+    ]
+
+
+def create_demo_icf_data_for_imported_study(study: Dict[str, Any]) -> bool:
+    icf_versions = build_demo_icf_versions_for_imported_study(study)
+    consents = build_demo_subject_consents_for_imported_study(study)
+
+    upsert_icf_versions_to_supabase(icf_versions)
+    upsert_subject_consents_to_supabase(consents)
 
     return True
