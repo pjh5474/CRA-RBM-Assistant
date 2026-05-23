@@ -17,7 +17,11 @@ from app.schemas.clinical_trials_schema import (
     ImportClinicalTrialResponse,
 )
 from app.schemas.audit_log_schema import AuditLogResponse
+from app.schemas.alert_schema import HighRiskSiteAlertResponse
+from app.schemas.monitoring_report_schema import MonitoringReportDraftResponse
 
+from app.services.monitoring_report_service import get_monitoring_report_draft
+from app.services.alert_service import get_high_risk_site_alerts
 from app.services.audit_log_service import get_audit_logs
 from app.services.action_item_service import get_action_items_by_study_id
 from app.services.checklist_service import (
@@ -104,6 +108,14 @@ def get_study_action_items(study_id: str):
     return get_action_items_by_study_id(study_id)
 
 
+@app.get(
+    "/api/studies/{study_id}/sites/{site_id}/monitoring-report-draft",
+    response_model=MonitoringReportDraftResponse,
+)
+def get_site_monitoring_report_draft(study_id: str, site_id: str):
+    return get_monitoring_report_draft(study_id=study_id, site_id=site_id)
+
+
 @app.get("/api/checklists", response_model=ChecklistResponse)
 def get_checklists():
     return get_all_checklists()
@@ -154,3 +166,11 @@ def get_audit_log_list(
         table_name=table_name,
         action=action,
     )
+
+
+@app.get(
+    "/api/alerts/high-risk-sites",
+    response_model=List[HighRiskSiteAlertResponse],
+)
+def get_high_risk_site_alert_list(include_medium: bool = True):
+    return get_high_risk_site_alerts(include_medium=include_medium)
