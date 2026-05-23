@@ -61,12 +61,21 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 									)}
 								</td>
 								<td className="px-5 py-4">
-									<Link
-										href={`/studies/${site.studyId}/sites/${site.siteId}/monitoring-report`}
-										className="inline-flex rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
-									>
-										View Report Draft
-									</Link>
+									<div className="flex flex-col gap-2">
+										<Link
+											href={`/studies/${site.studyId}/sites/${site.siteId}/monitoring-report`}
+											className="inline-flex rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
+										>
+											View Report Draft
+										</Link>
+
+										<Link
+											href={`/studies/${site.studyId}/sites/${site.siteId}/essential-documents`}
+											className="inline-flex rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+										>
+											View Essential Docs
+										</Link>
+									</div>
 								</td>
 							</tr>
 						))}

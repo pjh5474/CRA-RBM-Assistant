@@ -9,6 +9,7 @@ import {
 } from "@/types/clinicalTrial";
 import { AuditLog } from "@/types/auditLog";
 import { MonitoringReportDraft } from "@/types/monitoringReport";
+import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -122,5 +123,14 @@ export function getMonitoringReportDraft(
 ): Promise<MonitoringReportDraft> {
 	return fetchApi<MonitoringReportDraft>(
 		`/api/studies/${studyId}/sites/${siteId}/monitoring-report-draft`,
+	);
+}
+
+export function getEssentialDocumentReadiness(
+	studyId: string,
+	siteId: string,
+): Promise<EssentialDocumentReadiness> {
+	return fetchApi<EssentialDocumentReadiness>(
+		`/api/studies/${studyId}/sites/${siteId}/essential-documents`,
 	);
 }
