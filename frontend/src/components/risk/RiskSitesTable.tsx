@@ -1,5 +1,6 @@
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { RiskSite } from "@/types/risk";
+import Link from "next/link";
 
 interface RiskSitesTableProps {
 	sites: RiskSite[];
@@ -22,13 +23,16 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 							<th className="px-5 py-3">Risk Score</th>
 							<th className="px-5 py-3">Risk Level</th>
 							<th className="px-5 py-3">Risk Factors</th>
+							<th className="px-5 py-3">Actions</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-slate-100">
 						{sites.map((site) => (
 							<tr key={site.siteId} className="align-top">
 								<td className="px-5 py-4">
-									<p className="font-semibold text-slate-900">{site.siteName}</p>
+									<p className="font-semibold text-slate-900">
+										{site.siteName}
+									</p>
 									<p className="text-xs text-slate-500">{site.siteId}</p>
 								</td>
 								<td className="px-5 py-4 text-slate-700">
@@ -55,6 +59,14 @@ export function RiskSitesTable({ sites }: RiskSitesTableProps) {
 											))}
 										</ul>
 									)}
+								</td>
+								<td className="px-5 py-4">
+									<Link
+										href={`/studies/${site.studyId}/sites/${site.siteId}/monitoring-report`}
+										className="inline-flex rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
+									>
+										View Report Draft
+									</Link>
 								</td>
 							</tr>
 						))}

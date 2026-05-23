@@ -8,6 +8,7 @@ import {
 	ImportClinicalTrialResponse,
 } from "@/types/clinicalTrial";
 import { AuditLog } from "@/types/auditLog";
+import { MonitoringReportDraft } from "@/types/monitoringReport";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -112,5 +113,14 @@ export function getAuditLogs(params?: {
 
 	return fetchApi<AuditLog[]>(
 		`/api/audit-logs${queryString ? `?${queryString}` : ""}`,
+	);
+}
+
+export function getMonitoringReportDraft(
+	studyId: string,
+	siteId: string,
+): Promise<MonitoringReportDraft> {
+	return fetchApi<MonitoringReportDraft>(
+		`/api/studies/${studyId}/sites/${siteId}/monitoring-report-draft`,
 	);
 }
