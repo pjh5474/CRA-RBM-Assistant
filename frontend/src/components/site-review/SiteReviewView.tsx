@@ -14,7 +14,10 @@ export function SiteReviewView({ review }: SiteReviewViewProps) {
 	return (
 		<main className="min-h-screen bg-slate-50 px-6 py-10">
 			<div className="mx-auto max-w-6xl space-y-8">
-				<SiteStudyNav studyId={review.study.studyId} />
+				<SiteStudyNav
+					studyId={review.study.studyId}
+					siteId={review.site.siteId}
+				/>
 
 				<SiteReviewHeader review={review} />
 

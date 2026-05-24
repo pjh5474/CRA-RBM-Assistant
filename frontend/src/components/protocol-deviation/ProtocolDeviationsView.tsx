@@ -16,7 +16,7 @@ export function ProtocolDeviationsView({
 	return (
 		<main className="min-h-screen bg-slate-50 px-6 py-10">
 			<div className="mx-auto max-w-6xl space-y-8">
-				<SiteStudyNav studyId={summary.studyId} />
+				<SiteStudyNav studyId={summary.studyId} siteId={summary.siteId} />
 
 				<ProtocolDeviationsHeader siteName={summary.siteName} />
 
