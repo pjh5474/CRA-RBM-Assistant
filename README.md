@@ -2,6 +2,8 @@
 
 CRA-RBM Assistant is a prototype web application designed to support Clinical Research Associate (CRA) monitoring preparation by structuring public clinical trial information and synthetic site monitoring data.
 
+It focuses on translating CRA monitoring concepts into structured data workflows, review dashboards, issue tracking, and report draft generation.
+
 This project connects backend development, data quality management, and clinical research operations by implementing core workflows related to protocol review, site monitoring preparation, query/deviation follow-up, and risk-based monitoring.
 
 ## 1. Project Background
@@ -11,6 +13,21 @@ Clinical Research Associates are responsible for supporting clinical trial quali
 As clinical trials become more data-driven and risk-based, CRAs are increasingly expected to understand not only documents and regulations, but also data flow, system usage, query management, and risk indicators across trial sites.
 
 This project was developed as a portfolio project to demonstrate how software engineering and data management experience can be applied to CRA-related workflows.
+
+## Career Transition Context
+
+This project was created as a career-transition portfolio project for moving from data management and software development experience into a Clinical Research Associate role.
+
+The project is designed to show how data quality management, issue tracking, API development, database design, and dashboard implementation can be applied to CRA monitoring workflows.
+
+Core strengths demonstrated by this project include:
+
+- Structuring operational data into reviewable workflows
+- Tracking missing, pending, expired, and unresolved items
+- Connecting risk indicators to CRA follow-up actions
+- Translating site-level data into monitoring report draft content
+- Applying audit-like traceability to data changes
+- Understanding the relationship between clinical trial operations, data quality, and monitoring preparation
 
 ## 2. Project Goal
 
@@ -57,14 +74,15 @@ Generates CRA-oriented checklist items for:
 
 ### Site Risk Dashboard
 
-Visualizes site-level risk indicators using synthetic monitoring data:
+Visualizes site-level monitoring data and calculated risk scores using synthetic monitoring data:
 
-- Enrollment status
+- Enrollment progress (display only)
 - Open query count
 - Query aging
 - Protocol deviation count
 - SAE reporting delay
 - Missing essential documents
+- IP accountability and ICF issues (via risk factors)
 - Risk score
 - Risk level
 
@@ -104,73 +122,169 @@ Tracked changes include:
 
 This feature is intended to demonstrate traceability concepts and is not a validated regulatory audit trail.
 
+### Site Review Hub
+
+Provides an integrated site-level review page that brings together site risk, document readiness, protocol deviation status, ICF version issues, and monitoring report draft access.
+
+The Site Review Hub helps demonstrate how CRA monitoring preparation can be organized around each trial site rather than separate disconnected pages.
+
+### Enhanced Monitoring Report Draft
+
+Generates an IMV-style monitoring report draft by integrating:
+
+- Site risk summary
+- Essential document readiness findings
+- Protocol deviation findings
+- ICF version control findings
+- CRA follow-up action plan
+
+This feature demonstrates how structured monitoring data can support CRA documentation preparation.
+
+### Essential Document Readiness Tracker
+
+Tracks site-level essential document status using synthetic document records.
+
+Current document statuses include:
+
+- Ready
+- Missing
+- Pending
+- Expired
+
+The tracker calculates a readiness score and summarizes document-related follow-up needs.
+
+### Protocol Deviation Tracker
+
+Tracks protocol deviation records by:
+
+- Category
+- Severity
+- Status
+- Subject code
+- Root cause
+- Corrective action
+- Preventive action
+
+This feature demonstrates issue categorization and follow-up tracking beyond simple deviation counts.
+
+### ICF Version Control Check
+
+Checks whether subject consent records are consistent with the ICF version that was effective on the consent date.
+
+This feature demonstrates date-based version consistency validation, which connects data quality logic with CRA informed consent review.
+
+### Authentication and Import Protection
+
+Supabase Auth is used to protect write operations.
+
+Public users can review dashboards and CRA workflow pages without signing in, while ClinicalTrials.gov study import requires authentication because it creates or updates Supabase records.
+
 ## 4. System Architecture
 
-Initial MVP architecture:
+### Current Architecture
 
-Frontend
-↓
-Backend API
-↓
-Study Data / Site Monitoring Data
-↓
-Risk Scoring Engine
-↓
-Checklist Generator
-↓
-CRA Dashboard
-
-Current Architecture:
+```
 Next.js Frontend
-↓
-FastAPI Backend
-↓
+        ↓
+FastAPI Backend (feature routers under backend/app/api/)
+        ↓
 Supabase PostgreSQL
-↓
-Risk Scoring Service
-↓
-CRA Dashboard
+        ↓
+CRA Review Services
+```
 
-External Registry Integration:
-Next.js Frontend
-↓
-FastAPI Backend
-↓
+Backend services include:
+
+- Risk Scoring Service
+- Action Item Service
+- Site Review Summary Service
+- Monitoring Report Draft Service
+- Essential Document Readiness Service
+- Protocol Deviation Service
+- ICF Version Check Service
+
+→ CRA Dashboard / Site Review Hub
+
+### External Study Import Flow
+
+```
+ClinicalTrials.gov API
+        ↓
+FastAPI External Study Import API
+        ↓
 Supabase PostgreSQL
-↓
-Risk Scoring Service
-↓
-CRA Dashboard
+        ↓
+Synthetic Operational Demo Data Generation
+```
 
-Planned Automation Architecture:
+Generated demo data includes:
+
+- Demo sites
+- Monitoring metrics
+- Essential documents
+- Protocol deviations
+- ICF versions and subject consents
+
+→ Site Review Hub / Risk Dashboard / Monitoring Report Draft
+
+### Authentication Scope
+
+```
+Unauthenticated users
+  → Read-only access to dashboards, site review pages, and audit logs
+
+Authenticated users (Supabase Auth)
+  → ClinicalTrials.gov study import (Supabase writes)
+```
+
+### Planned Automation Architecture
+
+```
 n8n Scheduled Workflow
-↓
-FastAPI Action Item API
-↓
-High-risk Site Alert
+        ↓
+FastAPI High-risk Site Alert API
+        ↓
+Slack / Discord / Email Notification
+```
 
 ## 5. Data Sources
 
-This project uses:
+This project separates public study-level data from synthetic site-level operational data.
 
-- Manually created sample study data
-- Synthetic site monitoring data
-- Supabase PostgreSQL data tables
-- Public clinical trial registry data from ClinicalTrials.gov API
-- Trigger-based audit-like logs for data change traceability
+Public data:
 
-No real subject data, real patient data, or confidential sponsor protocol is used.
+- ClinicalTrials.gov public registry data
+- NCT ID, title, phase, condition, intervention, outcomes, and eligibility criteria
+
+Synthetic demo data:
+
+- Site information
+- Monitoring metrics
+- Essential document status
+- Protocol deviation records
+- ICF versions and subject consent records
+- CRA follow-up action items
+- Monitoring report draft inputs
+
+No real subject data, real patient data, real site performance data, confidential sponsor protocol, or proprietary clinical trial document is used.
 
 ## 6. MVP Scope
 
-The first MVP includes:
+The current MVP demonstrates a CRA-oriented site review workflow using public study-level data and synthetic site-level operational data.
 
-- Sample study data display
-- Study overview page
-- SIV/IMV checklist generation
-- Synthetic site monitoring data display
-- Site risk score calculation
-- Recommended CRA action items
+The MVP includes:
+
+- ClinicalTrials.gov public study search and detail preview
+- Auth-gated public study import into Supabase
+- Automatic synthetic operational data generation for imported studies
+- Study overview and site risk dashboard
+- Site Review Hub for integrated site-level review
+- CRA follow-up action item recommendations
+- Enhanced monitoring report draft generation
+- Essential document readiness tracking
+- Protocol deviation tracking
+- ICF version control check
+- Trigger-based audit-like data change logs
 
 ## 7. Risk Scoring Logic
 
@@ -181,7 +295,10 @@ Site risk is calculated based on the following indicators:
 - Protocol deviation count
 - SAE reporting delay count
 - Missing essential document count
-- Enrollment delay
+- IP accountability issue count
+- ICF issue count
+
+`targetEnrollment` and `currentEnrollment` are displayed for site context on dashboards but are not used in the risk score calculation.
 
 Risk level:
 
@@ -193,20 +310,40 @@ Detailed logic is described in docs/risk-scoring-logic.md
 
 ## 8. Tech Stack
 
-Planned stack:
+Current stack:
 
-- Frontend : Next.js
-- Backend : FastAPI
-- Database : Supabase PostgreSQL
-- Automation : n8n
-- Deployment: Docker, AWS or Vercel
-- Future AI Integration : LLM-based protocol summarization and checklist generation
+- Frontend: Next.js
+- Backend: FastAPI
+- Database: Supabase PostgreSQL
+- Authentication: Supabase Auth
+- External API: ClinicalTrials.gov API
+- Audit-like logging: PostgreSQL trigger-based change logs
+- Future automation: n8n
+- Future deployment: Vercel, Render/Railway/Fly.io, or AWS
+- Future AI integration: LLM-based protocol summarization and checklist generation
 
 FastAPI is selected for rapid API development, clinical trial registry API integration, risk scoring logic, and future LLM-based document processing.
 
 Supabase PostgreSQL is selected to provide a managed relational database for study, site, checklist, and monitoring metric data while supporting fast MVP development and deployment.
 
-## 9. Project Limitations
+## 9. Auth
+
+### Authentication and Import Protection
+
+Public users can browse study dashboards, site review pages, monitoring report drafts, audit logs, and CRA review modules without signing in.
+
+ClinicalTrials.gov study import is protected by Supabase Auth because it creates or updates records in Supabase PostgreSQL, including synthetic demo operational data.
+
+This design keeps the portfolio demo accessible while preventing uncontrolled database writes in a deployed environment.
+
+Current authentication scope:
+
+- Public read access for dashboard review
+- Authenticated import access
+- No user-level row ownership in the current MVP
+- Full multi-tenant RLS-based access control is planned for a future production-oriented version
+
+## 10. Project Limitations
 
 This project is a prototype and has the following limitations.
 
@@ -217,22 +354,27 @@ This project is a prototype and has the following limitations.
 - Checklist generation is based on predefined rules and templates in the MVP version.
 - This project includes a simplified trigger-based audit-like log for data change traceability, but it is not a validated audit trail.
 - This project does not implement validated clinical trial system requirements such as electronic signature, system validation, or 21 CFR Part 11 compliance.
+- Supabase Auth is used to protect study import, but user-level row ownership and RLS-based multi-tenant data isolation are not implemented in the current MVP.
+- Imported study data and generated demo operational data are shared in the current demo database.
 
-## 10. Future Improvements
+## 11. Future Improvements
 
 Planned improvements include:
 
-- Activity log frontend page with oldData/newData comparison
 - n8n-based high-risk site alert workflow
 - Protocol PDF upload and parsing
 - Protocol amendment comparison
-- ICF version control check
 - Delegation log and training log consistency check
+- CSV upload for site monitoring metrics
+- CSV upload for essential document trackers
+- Manual edit pages for deviations, documents, and ICF records
+- Export monitoring report draft as PDF or Markdown
 - LLM-assisted protocol summarization and CRA checklist generation
 - LLM-assisted monitoring focus area generation from imported public study data
+- User-level row ownership and RLS-based multi-tenant access control
 - Deployment with production environment configuration
 
-## 11. Current MVP Status
+## 12. Current MVP Status
 
 The current MVP includes:
 
@@ -246,12 +388,22 @@ The current MVP includes:
 - Automatic synthetic demo site and monitoring metric generation for imported studies
 - Import status handling, created or updated
 - Trigger-based audit-like log for table-level data change traceability
-- FastAPI backend API
-- Next.js frontend dashboard
+- FastAPI backend API with feature-based routers (`backend/app/api/`)
+- Next.js frontend dashboard with domain-based components (`frontend/src/components/`)
 - Supabase PostgreSQL database
 - JSON-based seed data and synthetic monitoring data
+- Supabase Auth login/sign-up
+- Auth-gated ClinicalTrials.gov import
+- Site Review Hub
+- Enhanced Monitoring Report Draft
+- Essential Document Readiness Tracker
+- Protocol Deviation Tracker
+- ICF Version Control Check
+- High-risk site alert API endpoint
 
-## 12. API Endpoints
+## 13. API Endpoints
+
+Backend routes are organized under `backend/app/api/` (for example: `studies`, `risk`, `site_monitoring`, `checklists`, `clinical_trials`, `audit_logs`, `alerts`).
 
 ### Study APIs
 
@@ -279,11 +431,11 @@ The current MVP includes:
 
 ### External Clinical Trial APIs
 
-| Method | Endpoint                                      | Description                                                          |
-| ------ | --------------------------------------------- | -------------------------------------------------------------------- |
-| GET    | /api/external/clinical-trials/search          | Search public studies from ClinicalTrials.gov                        |
-| GET    | /api/external/clinical-trials/{nct_id}        | Get public study detail by NCT ID                                    |
-| POST   | /api/external/clinical-trials/{nct_id}/import | Import public study into Supabase and generate demo operational data |
+| Method | Endpoint                                      | Description                                                                                              |
+| ------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| GET    | /api/external/clinical-trials/search          | Search public studies from ClinicalTrials.gov                                                            |
+| GET    | /api/external/clinical-trials/{nct_id}        | Get public study detail by NCT ID                                                                        |
+| POST   | /api/external/clinical-trials/{nct_id}/import | Import public study into Supabase and generate synthetic operational demo data. Requires authentication. |
 
 ### Audit Log APIs
 
@@ -291,7 +443,23 @@ The current MVP includes:
 | ------ | --------------- | ---------------------------------------- |
 | GET    | /api/audit-logs | Get trigger-based audit-like change logs |
 
-## 13. How to Run Locally
+### Alert APIs
+
+| Method | Endpoint                    | Description                   |
+| ------ | --------------------------- | ----------------------------- |
+| GET    | /api/alerts/high-risk-sites | Get high-risk site alert list |
+
+### Site Monitoring APIs
+
+| Method | Endpoint                                                        | Description                              |
+| ------ | --------------------------------------------------------------- | ---------------------------------------- |
+| GET    | /api/studies/{study_id}/sites/{site_id}/review-summary          | Get integrated site review summary       |
+| GET    | /api/studies/{study_id}/sites/{site_id}/monitoring-report-draft | Get enhanced monitoring report draft     |
+| GET    | /api/studies/{study_id}/sites/{site_id}/essential-documents     | Get essential document readiness summary |
+| GET    | /api/studies/{study_id}/sites/{site_id}/protocol-deviations     | Get protocol deviation summary           |
+| GET    | /api/studies/{study_id}/sites/{site_id}/icf-version-check       | Get ICF version consistency check        |
+
+## 14. How to Run Locally
 
 ### Backend
 
@@ -327,19 +495,29 @@ SUPABASE_KEY=your_supabase_key
 DATA_SOURCE=supabase
 ```
 
-### frontend Environment Variables
+### Frontend Environment Variables
 
-Create frontend/.env.local:
+Create `frontend/.env.local` (see `frontend/.env.example`):
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-## 14. Screenshots
+## 15. Screenshots
 
 ### Study List
 
 ![Study List](docs/images/study-list.png)
+
+### ClinicalTrials.gov Study Import
+
+![Study Import](docs/images/study-import.png)
+
+### Login and Auth-gated Import
+
+![Login](docs/images/login.png)
 
 ### Study Overview
 
@@ -349,11 +527,31 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
 ![Site Risk Dashboard](docs/images/risk-dashboard.png)
 
-### CRA Action Items
+### Site Review Hub
 
-![CRA Action Items](docs/images/action-items.png)
+![Site Review Hub](docs/images/site-review-hub.png)
 
-## 15. Supabase Setup
+### Enhanced Monitoring Report Draft
+
+![Enhanced Monitoring Report Draft](docs/images/enhanced-monitoring-report.png)
+
+### Essential Document Readiness Tracker
+
+![Essential Document Readiness](docs/images/essential-documents.png)
+
+### Protocol Deviation Tracker
+
+![Protocol Deviation Tracker](docs/images/protocol-deviations.png)
+
+### ICF Version Control Check
+
+![ICF Version Control Check](docs/images/icf-version-check.png)
+
+### Trigger-based Audit-like Logs
+
+![Audit Logs](docs/images/audit-logs.png)
+
+## 16. Supabase Setup
 
 This project uses Supabase PostgreSQL for study, site, monitoring metric, checklist, and audit-like log data.
 
@@ -363,17 +561,26 @@ Main tables:
 - sites
 - monitoring_metrics
 - checklist_templates
+- essential_documents
+- protocol_deviations
+- icf_versions
+- subject_consents
 - audit_logs
 
 The initial seed data can be inserted using the backend seed script.
+Trigger-based audit-like logs are applied to selected operational tables to record insert, update, and delete events with oldData and newData JSONB snapshots.
 
 ```bash
 cd backend
 python scripts/seed_supabase.py
 ```
 
-## 16. License
+## 17. License
 
 This project is licensed under the MIT License.
 
 This project is a portfolio prototype and is not intended for real clinical trial operation, regulatory submission, or validated clinical system use.
+
+---
+
+> **Korean documentation:** [README_kr.md](README_kr.md)
