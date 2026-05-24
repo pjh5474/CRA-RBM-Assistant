@@ -1,5 +1,6 @@
 import { PageContainer } from "@/components/layout/PageContainer";
 import { StudyCard } from "@/components/study/StudyCard";
+import AuthStatus from "@/components/auth/AuthStatus";
 import { getStudies } from "@/lib/api";
 import Link from "next/link";
 
@@ -8,6 +9,9 @@ export default async function HomePage() {
 
 	return (
 		<PageContainer>
+			<div className="mb-6 flex justify-end">
+				<AuthStatus />
+			</div>
 			<section className="mb-8">
 				<p className="mb-2 text-sm font-semibold text-blue-700">
 					CRA-RBM Assistant

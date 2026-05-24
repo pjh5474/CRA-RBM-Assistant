@@ -6,7 +6,9 @@ interface MonitoringReportHeaderProps {
 	report: MonitoringReportDraft;
 }
 
-export function MonitoringReportHeader({ report }: MonitoringReportHeaderProps) {
+export function MonitoringReportHeader({
+	report,
+}: MonitoringReportHeaderProps) {
 	return (
 		<section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 			<div className="mb-4 flex flex-wrap items-center gap-2">
@@ -20,7 +22,7 @@ export function MonitoringReportHeader({ report }: MonitoringReportHeaderProps) 
 			</div>
 
 			<p className="mb-2 text-sm font-semibold text-blue-700">
-				Monitoring Visit Report Draft
+				Enhanced Monitoring Visit Report Draft
 			</p>
 
 			<h1 className="text-2xl font-bold text-slate-900">{report.siteName}</h1>

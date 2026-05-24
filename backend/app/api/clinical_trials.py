@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.utils.auth import require_authenticated_user
 
 from app.schemas.clinical_trials_schema import (
     ClinicalTrialDetailResponse,
@@ -27,6 +28,12 @@ async def get_external_clinical_trial_detail(nct_id: str):
     return await get_clinical_trial_detail(nct_id)
 
 
-@router.post("/{nct_id}/import", response_model=ImportClinicalTrialResponse)
-async def import_external_clinical_trial(nct_id: str):
+@router.post(
+    "/{nct_id}/import",
+    response_model=ImportClinicalTrialResponse,
+)
+async def import_external_clinical_trial(
+    nct_id: str,
+    current_user=Depends(require_authenticated_user),
+):
     return await import_clinical_trial_to_supabase(nct_id)

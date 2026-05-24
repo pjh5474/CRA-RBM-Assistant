@@ -1,6 +1,6 @@
 "use client";
 
-import { type SubmitEvent, useState } from "react";
+import { type SubmitEvent, useEffect, useState } from "react";
 import { SearchResultsPanel } from "@/components/study-import/SearchResultsPanel";
 import { StudyImportHeader } from "@/components/study-import/StudyImportHeader";
 import { StudyImportSearchForm } from "@/components/study-import/StudyImportSearchForm";
@@ -14,6 +14,8 @@ import {
 	ClinicalTrialDetail,
 	ClinicalTrialSearchItem,
 } from "@/types/clinicalTrial";
+import AuthStatus from "../auth/AuthStatus";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function StudyImportView() {
 	const [query, setQuery] = useState("diabetes");
@@ -32,6 +34,31 @@ export function StudyImportView() {
 	>(null);
 	const [demoDataCreated, setDemoDataCreated] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+	const supabase = createSupabaseBrowserClient();
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	useEffect(() => {
+		async function loadAuthState() {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			setIsAuthenticated(Boolean(session?.access_token));
+		}
+
+		loadAuthState();
+
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			setIsAuthenticated(Boolean(session?.access_token));
+		});
+
+		return () => {
+			subscription.unsubscribe();
+		};
+	}, [supabase.auth]);
 
 	async function handleSearch(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -92,7 +119,21 @@ export function StudyImportView() {
 			setImportStatus(null);
 			setDemoDataCreated(false);
 
-			const response = await importClinicalTrialToSupabase(selectedStudy.nctId);
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			const accessToken = session?.access_token;
+
+			if (!accessToken) {
+				setErrorMessage("Sign in is required to import studies.");
+				return;
+			}
+
+			const response = await importClinicalTrialToSupabase(
+				selectedStudy.nctId,
+				accessToken,
+			);
 
 			setImportedStudyId(response.study.studyId);
 			setImportStatus(response.status);
@@ -109,6 +150,9 @@ export function StudyImportView() {
 	return (
 		<main className="min-h-screen bg-slate-50 px-6 py-10">
 			<div className="mx-auto max-w-7xl space-y-8">
+				<div className="flex justify-end">
+					<AuthStatus />
+				</div>
 				<StudyImportHeader />
 
 				<StudyImportSearchForm
@@ -135,6 +179,7 @@ export function StudyImportView() {
 						importStatus={importStatus}
 						importStatusMessage={importStatusMessage}
 						demoDataCreated={demoDataCreated}
+						isAuthenticated={isAuthenticated}
 						onImportStudy={handleImportStudy}
 					/>
 				</section>

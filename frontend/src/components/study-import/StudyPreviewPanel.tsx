@@ -12,6 +12,7 @@ interface StudyPreviewPanelProps {
 	importStatus: "created" | "updated" | null;
 	importStatusMessage: string | null;
 	demoDataCreated: boolean;
+	isAuthenticated: boolean;
 	onImportStudy: () => void;
 }
 
@@ -23,6 +24,7 @@ export function StudyPreviewPanel({
 	importStatus,
 	importStatusMessage,
 	demoDataCreated,
+	isAuthenticated,
 	onImportStudy,
 }: StudyPreviewPanelProps) {
 	return (
@@ -116,11 +118,28 @@ export function StudyPreviewPanel({
 								<button
 									type="button"
 									onClick={onImportStudy}
-									disabled={isImporting}
+									disabled={isImporting || !isAuthenticated}
 									className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
 								>
 									{isImporting ? "Importing..." : "Import to Supabase"}
 								</button>
+
+								{!isAuthenticated && (
+									<Link
+										href="/login"
+										className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+									>
+										Sign in to import
+									</Link>
+								)}
+
+								{!isAuthenticated && (
+									<p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
+										Sign in is required to import studies and create demo
+										operational data. Public search and preview are available
+										without sign-in.
+									</p>
+								)}
 
 								{importedStudyId && (
 									<>

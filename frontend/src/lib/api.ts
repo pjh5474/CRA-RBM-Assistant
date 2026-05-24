@@ -85,11 +85,15 @@ export function getClinicalTrialDetail(
 
 export function importClinicalTrialToSupabase(
 	nctId: string,
+	accessToken: string,
 ): Promise<ImportClinicalTrialResponse> {
 	return fetchApi<ImportClinicalTrialResponse>(
 		`/api/external/clinical-trials/${nctId}/import`,
 		{
 			method: "POST",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
 		},
 	);
 }
