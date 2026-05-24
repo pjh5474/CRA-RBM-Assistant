@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from app.api import api_router
+
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
+
 
 app = FastAPI(
     title="CRA-RBM Assistant API",
@@ -13,6 +17,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        frontend_origin,
     ],
     allow_credentials=True,
     allow_methods=["*"],
