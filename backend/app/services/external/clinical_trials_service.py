@@ -13,6 +13,11 @@ from app.services.demo_data_service import (
 
 CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
+CLINICAL_TRIALS_API_HEADERS = {
+    "User-Agent": "CRA-RBM-Assistant/1.0 (portfolio project; contact: warwarsn@gmail.com)",
+    "Accept": "application/json",
+}
+
 
 def _get_nested(data: Dict[str, Any], path: List[str], default=None):
     current = data
@@ -151,12 +156,20 @@ async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, A
     }
 
     async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(CLINICAL_TRIALS_API_BASE_URL, params=params)
+        response = await client.get(
+            CLINICAL_TRIALS_API_BASE_URL,
+            params=params,
+            headers=CLINICAL_TRIALS_API_HEADERS,
+        )
 
     if response.status_code != 200:
         raise HTTPException(
             status_code=response.status_code,
-            detail="ClinicalTrials.gov API request failed",
+            detail={
+                "message": "ClinicalTrials.gov API request failed",
+                "statusCode": response.status_code,
+                "response": response.text[:500],
+            },
         )
 
     data = response.json()
@@ -179,7 +192,10 @@ async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
     url = f"{CLINICAL_TRIALS_API_BASE_URL}/{nct_id}"
 
     async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(url)
+        response = await client.get(
+            url,
+            headers=CLINICAL_TRIALS_API_HEADERS,
+        )
 
     if response.status_code == 404:
         raise HTTPException(
@@ -190,7 +206,11 @@ async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
     if response.status_code != 200:
         raise HTTPException(
             status_code=response.status_code,
-            detail="ClinicalTrials.gov API request failed",
+            detail={
+                "message": "ClinicalTrials.gov API request failed",
+                "statusCode": response.status_code,
+                "response": response.text[:500],
+            },
         )
 
     data = response.json()
