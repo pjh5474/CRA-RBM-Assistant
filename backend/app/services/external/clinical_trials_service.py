@@ -1,6 +1,5 @@
 from typing import Any, Dict, List
-
-import httpx
+from curl_cffi.requests import AsyncSession
 from fastapi import HTTPException
 
 from app.repositories.study_repository import (
@@ -16,7 +15,31 @@ CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 CLINICAL_TRIALS_API_HEADERS = {
     "User-Agent": "CRA-RBM-Assistant/1.0 (portfolio project; contact: warwarsn@gmail.com)",
     "Accept": "application/json",
+    "Accept-Language": "en-US,en;q=0.9",
 }
+
+
+async def _get_clinical_trials_json(
+    url: str, params: Dict[str, Any] | None = None
+) -> Dict[str, Any]:
+    async with AsyncSession(impersonate="chrome120", timeout=20) as session:
+        response = await session.get(
+            url,
+            params=params,
+            headers=CLINICAL_TRIALS_API_HEADERS,
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "ClinicalTrials.gov API request failed",
+                "statusCode": response.status_code,
+                "response": response.text[:500],
+            },
+        )
+
+    return response.json()
 
 
 def _get_nested(data: Dict[str, Any], path: List[str], default=None):
@@ -155,24 +178,11 @@ async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, A
         "pageSize": page_size,
     }
 
-    async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(
-            CLINICAL_TRIALS_API_BASE_URL,
-            params=params,
-            headers=CLINICAL_TRIALS_API_HEADERS,
-        )
+    data = await _get_clinical_trials_json(
+        CLINICAL_TRIALS_API_BASE_URL,
+        params=params,
+    )
 
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail={
-                "message": "ClinicalTrials.gov API request failed",
-                "statusCode": response.status_code,
-                "response": response.text[:500],
-            },
-        )
-
-    data = response.json()
     studies = data.get("studies", [])
 
     results = [
@@ -191,29 +201,19 @@ async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, A
 async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
     url = f"{CLINICAL_TRIALS_API_BASE_URL}/{nct_id}"
 
-    async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(
-            url,
-            headers=CLINICAL_TRIALS_API_HEADERS,
-        )
+    try:
+        data = await _get_clinical_trials_json(url)
+    except HTTPException as exc:
+        detail = exc.detail
 
-    if response.status_code == 404:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Clinical trial not found: {nct_id}",
-        )
+        if isinstance(detail, dict) and detail.get("statusCode") == 404:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Clinical trial not found: {nct_id}",
+            ) from exc
 
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail={
-                "message": "ClinicalTrials.gov API request failed",
-                "statusCode": response.status_code,
-                "response": response.text[:500],
-            },
-        )
+        raise
 
-    data = response.json()
     return _map_detail(data)
 
 
