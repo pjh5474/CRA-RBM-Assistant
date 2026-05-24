@@ -6,6 +6,26 @@ It focuses on translating CRA monitoring concepts into structured data workflows
 
 This project connects backend development, data quality management, and clinical research operations by implementing core workflows related to protocol review, site monitoring preparation, query/deviation follow-up, and risk-based monitoring.
 
+## Live Demo
+
+- **Frontend Demo:** https://cra-rbm-assistant.vercel.app
+- **Backend API Docs:** https://cra-rbm-assistant.onrender.com/docs
+
+> **Note:** The backend is hosted on a free tier and may take some time to wake up on the first request after inactivity.
+
+## Deployment
+
+This project is deployed using:
+
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Database/Auth:** Supabase
+
+The frontend and backend are deployed from a monorepo structure by setting separate root directories:
+
+- **Vercel root directory:** `frontend`
+- **Render root directory:** `backend`
+
 ## 1. Project Background
 
 Clinical Research Associates are responsible for supporting clinical trial quality by monitoring protocol compliance, subject safety, data integrity, essential document readiness, investigational product accountability, and site performance.

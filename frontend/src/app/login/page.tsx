@@ -87,6 +87,15 @@ export default function LoginPage() {
 						sign-in.
 					</p>
 
+					<p className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-700">
+						<strong className="font-semibold text-slate-900">
+							New here?
+						</strong>{" "}
+						You can sign up on this page. Enter your email and password above,
+						then click <strong className="font-semibold">Sign up</strong>. If
+						email confirmation is enabled, check your inbox before signing in.
+					</p>
+
 					<form onSubmit={handleSignIn} className="mt-6 space-y-4">
 						<div>
 							<label className="mb-1 block text-sm font-medium text-slate-700">

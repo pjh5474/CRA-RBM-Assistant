@@ -6,6 +6,26 @@ CRA 모니터링 개념을 구조화된 데이터 워크플로, 검토 대시보
 
 이 프로젝트는 프로토콜 검토, 사이트 모니터링 준비, 쿼리/일탈 후속 조치, 위험 기반 모니터링(RBM)과 관련된 핵심 워크플로를 구현함으로써 백엔드 개발, 데이터 품질 관리, 임상 연구 운영을 연결합니다.
 
+## Live Demo (라이브 데모)
+
+- **프론트엔드:** https://cra-rbm-assistant.vercel.app
+- **백엔드 API 문서:** https://cra-rbm-assistant.onrender.com/docs
+
+> **참고:** 백엔드는 Render 무료 플랜에 호스팅되어 있습니다. 유휴 상태 후 첫 요청 시 응답까지 시간이 걸릴 수 있습니다(cold start).
+
+## Deployment (배포)
+
+배포 구성:
+
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Database/Auth:** Supabase
+
+모노레포에서 루트 디렉터리를 분리해 프론트엔드와 백엔드를 각각 배포합니다.
+
+- **Vercel root directory:** `frontend`
+- **Render root directory:** `backend`
+
 ## 1. 프로젝트 배경
 
 CRA(Clinical Research Associate)는 프로토콜 준수, 피험자 안전, 데이터 무결성, 필수 문서 준비 상태, 시험용 의약품 관리, 사이트 성과 모니터링을 통해 임상시험 품질을 지원하는 역할을 합니다.
