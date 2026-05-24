@@ -17,7 +17,7 @@ export function EssentialDocumentsView({
 	return (
 		<main className="min-h-screen bg-slate-50 px-6 py-10">
 			<div className="mx-auto max-w-6xl space-y-8">
-				<SiteStudyNav studyId={readiness.studyId} />
+				<SiteStudyNav studyId={readiness.studyId} siteId={readiness.siteId} />
 
 				<EssentialDocumentsHeader siteName={readiness.siteName} />
 
