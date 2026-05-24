@@ -6,6 +6,12 @@ CRA 모니터링 개념을 구조화된 데이터 워크플로, 검토 대시보
 
 이 프로젝트는 프로토콜 검토, 사이트 모니터링 준비, 쿼리/일탈 후속 조치, 위험 기반 모니터링(RBM)과 관련된 핵심 워크플로를 구현함으로써 백엔드 개발, 데이터 품질 관리, 임상 연구 운영을 연결합니다.
 
+---
+
+> **참고:** 영문 원본은 [README.md](README.md)를 참고하세요.
+
+---
+
 ## Live Demo (라이브 데모)
 
 - **프론트엔드:** https://cra-rbm-assistant.vercel.app
@@ -491,7 +497,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-**API 문서:** http://localhost:8000/docs
+**API 문서:** https://cra-rbm-assistant.onrender.com/docs
 
 ### Frontend
 
@@ -595,7 +601,3 @@ python scripts/seed_supabase.py
 MIT License
 
 본 프로젝트는 포트폴리오 프로토타입이며, 실제 임상시험 운영, 규제 제출, 검증된 임상시스템 용도가 아닙니다.
-
----
-
-> **참고:** 영문 원본은 [README.md](README.md)를 참고하세요.

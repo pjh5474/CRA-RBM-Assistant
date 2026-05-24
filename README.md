@@ -6,6 +6,12 @@ It focuses on translating CRA monitoring concepts into structured data workflows
 
 This project connects backend development, data quality management, and clinical research operations by implementing core workflows related to protocol review, site monitoring preparation, query/deviation follow-up, and risk-based monitoring.
 
+---
+
+> **Korean documentation:** [README_kr.md](README_kr.md)
+
+---
+
 ## Live Demo
 
 - **Frontend Demo:** https://cra-rbm-assistant.vercel.app
@@ -493,7 +499,7 @@ uvicorn app.main:app --reload
 
 ## Backend API documentation:
 
-http://localhost:8000/docs
+https://cra-rbm-assistant.onrender.com/docs
 
 ### Frontend
 
@@ -600,7 +606,3 @@ python scripts/seed_supabase.py
 This project is licensed under the MIT License.
 
 This project is a portfolio prototype and is not intended for real clinical trial operation, regulatory submission, or validated clinical system use.
-
----
-
-> **Korean documentation:** [README_kr.md](README_kr.md)
