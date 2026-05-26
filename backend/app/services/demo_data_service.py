@@ -14,6 +14,10 @@ from app.repositories.icf_repository import (
     upsert_icf_versions_to_supabase,
     upsert_subject_consents_to_supabase,
 )
+from app.repositories.delegation_training_repository import (
+    upsert_delegation_training_records_to_supabase,
+    upsert_site_staff_to_supabase,
+)
 
 
 def build_demo_sites_for_imported_study(study: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -115,6 +119,7 @@ def create_demo_operational_data_for_imported_study(
     create_demo_essential_documents_for_imported_study(study)
     create_demo_protocol_deviations_for_imported_study(study)
     create_demo_icf_data_for_imported_study(study)
+    create_demo_delegation_training_data_for_imported_study(study)
 
     return True
 
@@ -351,5 +356,112 @@ def create_demo_icf_data_for_imported_study(study: Dict[str, Any]) -> bool:
 
     upsert_icf_versions_to_supabase(icf_versions)
     upsert_subject_consents_to_supabase(consents)
+
+    return True
+
+
+def build_demo_site_staff_for_imported_study(
+    study: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    study_id = study["studyId"]
+
+    staff_members: List[Dict[str, Any]] = []
+
+    for site_index in range(1, 4):
+        site_id = f"{study_id}-SITE-{site_index:03d}"
+
+        staff_members.extend(
+            [
+                {
+                    "staffId": f"{site_id}-STAFF-001",
+                    "studyId": study_id,
+                    "siteId": site_id,
+                    "staffName": f"CRC Demo Staff {site_index}-01",
+                    "role": "Study Coordinator",
+                    "isActive": True,
+                },
+                {
+                    "staffId": f"{site_id}-STAFF-002",
+                    "studyId": study_id,
+                    "siteId": site_id,
+                    "staffName": f"Sub-I Demo Staff {site_index}-02",
+                    "role": "Sub-Investigator",
+                    "isActive": True,
+                },
+            ]
+        )
+
+    return staff_members
+
+
+def build_demo_delegation_training_records_for_imported_study(
+    study: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    study_id = study["studyId"]
+
+    return [
+        {
+            "recordId": f"{study_id}-SITE-001-DTR-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-001",
+            "staffId": f"{study_id}-SITE-001-STAFF-001",
+            "delegatedTask": "Informed Consent Process",
+            "delegationStartDate": "2026-05-10",
+            "delegationEndDate": None,
+            "gcpTrainingDate": "2026-04-20",
+            "protocolTrainingDate": "2026-05-01",
+            "trainingStatus": "Complete",
+            "comment": "Training completed before delegation start date.",
+        },
+        {
+            "recordId": f"{study_id}-SITE-002-DTR-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "staffId": f"{study_id}-SITE-002-STAFF-001",
+            "delegatedTask": "Investigational Product Accountability",
+            "delegationStartDate": "2026-05-01",
+            "delegationEndDate": None,
+            "gcpTrainingDate": "2026-04-15",
+            "protocolTrainingDate": "2026-05-03",
+            "trainingStatus": "Complete",
+            "comment": "Protocol training completed after delegation start date.",
+        },
+        {
+            "recordId": f"{study_id}-SITE-002-DTR-002",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-002",
+            "staffId": f"{study_id}-SITE-002-STAFF-002",
+            "delegatedTask": "Safety Reporting",
+            "delegationStartDate": "2026-05-02",
+            "delegationEndDate": None,
+            "gcpTrainingDate": None,
+            "protocolTrainingDate": "2026-04-28",
+            "trainingStatus": "Missing",
+            "comment": "GCP training evidence is missing.",
+        },
+        {
+            "recordId": f"{study_id}-SITE-003-DTR-001",
+            "studyId": study_id,
+            "siteId": f"{study_id}-SITE-003",
+            "staffId": f"{study_id}-SITE-003-STAFF-001",
+            "delegatedTask": "Source Data Entry",
+            "delegationStartDate": "2026-05-08",
+            "delegationEndDate": None,
+            "gcpTrainingDate": "2026-04-10",
+            "protocolTrainingDate": "2026-04-25",
+            "trainingStatus": "Complete",
+            "comment": "Training dates are consistent with delegation start date.",
+        },
+    ]
+
+
+def create_demo_delegation_training_data_for_imported_study(
+    study: Dict[str, Any],
+) -> bool:
+    staff_members = build_demo_site_staff_for_imported_study(study)
+    records = build_demo_delegation_training_records_for_imported_study(study)
+
+    upsert_site_staff_to_supabase(staff_members)
+    upsert_delegation_training_records_to_supabase(records)
 
     return True
