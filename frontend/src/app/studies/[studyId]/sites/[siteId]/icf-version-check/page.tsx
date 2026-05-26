@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ScenarioNote } from "@/components/ui/ScenarioNote";
 import { getIcfVersionCheck } from "@/lib/api";
 import { IcfVersion, IcfVersionCheck, IcfVersionCheckItem } from "@/types/icf";
 
@@ -49,6 +50,12 @@ export default async function IcfVersionCheckPage({
 						demonstrates date-based version control review for CRA monitoring.
 					</p>
 				</section>
+
+				<ScenarioNote>
+					This scenario assumes that ICF v2.0 became effective on 2026-05-05,
+					but one subject signed ICF v1.0 on 2026-05-10. The check is designed
+					to demonstrate date-based ICF version consistency review.
+				</ScenarioNote>
 
 				<section className="grid gap-4 md:grid-cols-3">
 					<SummaryCard title="Total Consents" value={check.totalConsents} />

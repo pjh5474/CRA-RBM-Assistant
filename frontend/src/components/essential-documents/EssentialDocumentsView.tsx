@@ -5,6 +5,7 @@ import { EssentialDocumentsTable } from "@/components/essential-documents/Essent
 import { ReadinessBar } from "@/components/essential-documents/ReadinessBar";
 import { SiteStudyNav } from "@/components/layout/SiteStudyNav";
 import { PortfolioPrototypeNotice } from "@/components/ui/PortfolioPrototypeNotice";
+import { ScenarioNote } from "@/components/ui/ScenarioNote";
 import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 
 interface EssentialDocumentsViewProps {
@@ -20,6 +21,11 @@ export function EssentialDocumentsView({
 				<SiteStudyNav studyId={readiness.studyId} siteId={readiness.siteId} />
 
 				<EssentialDocumentsHeader siteName={readiness.siteName} />
+
+				<ScenarioNote>
+					This dataset includes missing, pending, and expired document statuses
+					to demonstrate essential document readiness review.
+				</ScenarioNote>
 
 				<EssentialDocumentsSummaryGrid readiness={readiness} />
 

@@ -1,6 +1,6 @@
 # CRA-RBM Assistant
 
-CRA-RBM Assistant is a prototype web application designed to support Clinical Research Associate (CRA) monitoring preparation by structuring public clinical trial information and synthetic site monitoring data.
+CRA-RBM Assistant is a prototype web application designed to support Clinical Research Associate (CRA) monitoring preparation by structuring public clinical trial information and scenario-based synthetic operational data designed to represent CRA monitoring review scenarios.
 
 It focuses on translating CRA monitoring concepts into structured data workflows, review dashboards, issue tracking, and report draft generation.
 
@@ -11,6 +11,13 @@ This project connects backend development, data quality management, and clinical
 > **Korean documentation:** [README_kr.md](README_kr.md)
 
 ---
+
+## Documentation
+
+- [Data Dictionary](docs/data-dictionary.md)
+- [Risk Scoring Logic](docs/risk-scoring-logic.md)
+- [Scenario-based Synthetic Dataset](docs/scenario-dataset.md)
+- [Portfolio Interpretation](docs/portfolio-interpretation.md)
 
 ## Live Demo
 
@@ -62,7 +69,7 @@ The goal of this project is to build a CRA-oriented monitoring support prototype
 - Import or define clinical study information
 - Extract key protocol-related elements
 - Generate SIV and IMV checklist items
-- Manage synthetic site monitoring data
+- Manage scenario-based synthetic site monitoring data
 - Calculate site-level risk scores
 - Suggest CRA follow-up action items for high-risk sites
 
@@ -205,6 +212,20 @@ Supabase Auth is used to protect write operations.
 
 Public users can review dashboards and CRA workflow pages without signing in, while ClinicalTrials.gov study import requires authentication because it creates or updates Supabase records.
 
+### Scenario-based Synthetic Operational Dataset
+
+Uses controlled synthetic operational data to demonstrate CRA monitoring review logic without using real patient, site, or sponsor-confidential data.
+
+The dataset includes intentionally designed review scenarios such as:
+
+- Essential document readiness issues
+- Protocol deviation records
+- ICF version consistency issues
+- Safety reporting delay signals
+- Site-level risk indicators
+
+These scenarios are used to test and demonstrate how the application identifies monitoring risks, generates follow-up actions, and integrates findings into the monitoring report draft.
+
 ## 4. System Architecture
 
 ### Current Architecture
@@ -275,24 +296,34 @@ Slack / Discord / Email Notification
 
 ## 5. Data Sources
 
-This project separates public study-level data from synthetic site-level operational data.
+This project separates public study-level data from scenario-based synthetic site-level operational data.
 
-Public data:
+Public study-level data:
 
 - ClinicalTrials.gov public registry data
-- NCT ID, title, phase, condition, intervention, outcomes, and eligibility criteria
+- NCT ID, study title, phase, condition, intervention, outcomes, and eligibility criteria
 
-Synthetic demo data:
+Scenario-based synthetic operational data:
 
 - Site information
 - Monitoring metrics
-- Essential document status
+- Essential document readiness records
 - Protocol deviation records
 - ICF versions and subject consent records
 - CRA follow-up action items
 - Monitoring report draft inputs
+- Trigger-based audit-like change logs
 
-No real subject data, real patient data, real site performance data, confidential sponsor protocol, or proprietary clinical trial document is used.
+The synthetic operational dataset is intentionally designed to represent controlled CRA monitoring review scenarios, such as:
+
+- Missing, pending, or expired essential documents
+- Visit window deviation
+- Missing protocol-required assessment
+- SAE reporting delay signal
+- Outdated ICF version use after a newer version became effective
+- Site-level risk indicators requiring CRA follow-up
+
+No real patient data, real subject data, real site performance data, confidential sponsor protocol, or proprietary clinical trial document is used.
 
 ## 6. MVP Scope
 

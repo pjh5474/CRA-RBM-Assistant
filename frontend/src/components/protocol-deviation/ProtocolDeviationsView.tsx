@@ -4,6 +4,7 @@ import { ProtocolDeviationsList } from "@/components/protocol-deviation/Protocol
 import { ProtocolDeviationsSummaryGrid } from "@/components/protocol-deviation/ProtocolDeviationsSummaryGrid";
 import { SiteStudyNav } from "@/components/layout/SiteStudyNav";
 import { PortfolioPrototypeNotice } from "@/components/ui/PortfolioPrototypeNotice";
+import { ScenarioNote } from "@/components/ui/ScenarioNote";
 import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
 
 interface ProtocolDeviationsViewProps {
@@ -19,6 +20,13 @@ export function ProtocolDeviationsView({
 				<SiteStudyNav studyId={summary.studyId} siteId={summary.siteId} />
 
 				<ProtocolDeviationsHeader siteName={summary.siteName} />
+
+				<ScenarioNote>
+					This dataset includes a visit window deviation, missing assessment,
+					and SAE reporting delay to demonstrate how protocol compliance
+					findings can be structured by severity, status, root cause, and
+					corrective/preventive action.
+				</ScenarioNote>
 
 				<ProtocolDeviationsSummaryGrid summary={summary} />
 
