@@ -298,6 +298,10 @@ Slack / Discord / Email Notification
 
 This project separates public study-level data from scenario-based synthetic site-level operational data.
 
+Scenario-based synthetic operational data is generated through deterministic scenario profiles.
+The same imported study ID generates the same scenario profile, while different study IDs may generate different CRA monitoring review scenarios.
+This keeps demo data reproducible while allowing the portfolio to demonstrate multiple risk patterns.
+
 Public study-level data:
 
 - ClinicalTrials.gov public registry data
