@@ -23,3 +23,17 @@ Instead, it uses scenario-based synthetic operational data to demonstrate CRA mo
 | Missing essential document | Delegation Log or IP Accountability Log marked Missing | Demonstrate site file readiness review             |
 | Expired GCP certificate    | GCP certificate marked Expired                         | Demonstrate training/qualification evidence review |
 | SAE reporting delay        | SAE delay count and deviation record added             | Demonstrate safety reporting follow-up             |
+
+## Scenario Profile Assignment
+
+Each imported public study is assigned a deterministic scenario profile based on its study ID.
+
+This keeps synthetic data reproducible while allowing different imported studies to demonstrate different CRA monitoring risk scenarios.
+
+| Scenario Profile         | Main Review Focus                                               |
+| ------------------------ | --------------------------------------------------------------- |
+| DOCUMENT_READINESS_RISK  | Essential document missing/expired/pending issues               |
+| PROTOCOL_DEVIATION_RISK  | Visit window, missing assessment, protocol compliance follow-up |
+| ICF_VERSION_RISK         | Consent date and ICF version consistency                        |
+| DELEGATION_TRAINING_RISK | Training completion and delegation timing consistency           |
+| BALANCED_HIGH_RISK       | Multiple risk signals across site operations                    |
