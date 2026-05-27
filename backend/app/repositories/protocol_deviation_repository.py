@@ -17,6 +17,7 @@ def to_camel_case_deviation(row: Dict[str, Any]) -> Dict[str, Any]:
         "rootCause": row.get("root_cause"),
         "correctiveAction": row.get("corrective_action"),
         "preventiveAction": row.get("preventive_action"),
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -60,6 +61,7 @@ def upsert_protocol_deviations_to_supabase(
             "root_cause": deviation.get("rootCause"),
             "corrective_action": deviation.get("correctiveAction"),
             "preventive_action": deviation.get("preventiveAction"),
+            "owner_user_id": deviation.get("ownerUserId"),
         }
         for deviation in deviations
     ]

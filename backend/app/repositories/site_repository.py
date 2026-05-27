@@ -14,6 +14,7 @@ def to_camel_case_site(row: Dict[str, Any]) -> Dict[str, Any]:
         "activationDate": row["activation_date"],
         "targetEnrollment": row["target_enrollment"],
         "currentEnrollment": row["current_enrollment"],
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -48,6 +49,7 @@ def upsert_sites_to_supabase(sites: List[Dict[str, Any]]) -> List[Dict[str, Any]
             "activation_date": site["activationDate"],
             "target_enrollment": site["targetEnrollment"],
             "current_enrollment": site["currentEnrollment"],
+            "owner_user_id": site.get("ownerUserId"),
         }
         for site in sites
     ]

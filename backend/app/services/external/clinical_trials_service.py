@@ -297,7 +297,9 @@ def convert_clinical_trial_to_internal_study(
     }
 
 
-async def import_clinical_trial_to_supabase(nct_id: str) -> Dict[str, Any]:
+async def import_clinical_trial_to_supabase(
+    nct_id: str, owner_user_id: str
+) -> Dict[str, Any]:
     """
     Fetch ClinicalTrials.gov detail, convert it into internal Study format,
     upsert it into Supabase, and create synthetic demo operational data.
@@ -307,9 +309,15 @@ async def import_clinical_trial_to_supabase(nct_id: str) -> Dict[str, Any]:
     clinical_trial = await get_clinical_trial_detail(nct_id)
     internal_study = convert_clinical_trial_to_internal_study(clinical_trial)
 
+    internal_study["ownerUserId"] = owner_user_id
+    internal_study["isPublicDemo"] = False
+
     imported_study = upsert_study_to_supabase(internal_study)
 
-    demo_data_created = replace_demo_operational_data_for_imported_study(imported_study)
+    demo_data_created = replace_demo_operational_data_for_imported_study(
+        study=imported_study,
+        owner_user_id=owner_user_id,
+    )
 
     status = "updated" if existed_before_import else "created"
 

@@ -11,6 +11,7 @@ def to_camel_case_site_staff(row: Dict[str, Any]) -> Dict[str, Any]:
         "staffName": row["staff_name"],
         "role": row["role"],
         "isActive": row["is_active"],
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -32,6 +33,7 @@ def to_camel_case_delegation_training_record(row: Dict[str, Any]) -> Dict[str, A
         "protocolTrainingDate": row.get("protocol_training_date"),
         "trainingStatus": row["training_status"],
         "comment": row.get("comment"),
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -61,9 +63,7 @@ def get_delegation_training_records_by_site_from_supabase(
 
     response = (
         supabase.table("delegation_training_records")
-        .select(
-            "*, site_staff(staff_name, role, is_active)"
-        )
+        .select("*, site_staff(staff_name, role, is_active)")
         .eq("study_id", study_id)
         .eq("site_id", site_id)
         .order("delegation_start_date")
@@ -89,14 +89,13 @@ def upsert_site_staff_to_supabase(
             "staff_name": staff["staffName"],
             "role": staff["role"],
             "is_active": staff["isActive"],
+            "owner_user_id": staff.get("ownerUserId"),
         }
         for staff in staff_members
     ]
 
     response = (
-        supabase.table("site_staff")
-        .upsert(rows, on_conflict="staff_id")
-        .execute()
+        supabase.table("site_staff").upsert(rows, on_conflict="staff_id").execute()
     )
 
     return [to_camel_case_site_staff(row) for row in response.data]
@@ -123,6 +122,7 @@ def upsert_delegation_training_records_to_supabase(
             "protocol_training_date": record.get("protocolTrainingDate"),
             "training_status": record["trainingStatus"],
             "comment": record.get("comment"),
+            "owner_user_id": record.get("ownerUserId"),
         }
         for record in records
     ]

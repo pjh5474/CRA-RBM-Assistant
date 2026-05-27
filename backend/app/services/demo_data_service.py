@@ -41,6 +41,19 @@ ESSENTIAL_DOCUMENT_TYPES = [
 ]
 
 
+def attach_owner_user_id(
+    rows: List[Dict[str, Any]],
+    owner_user_id: str,
+) -> List[Dict[str, Any]]:
+    return [
+        {
+            **row,
+            "ownerUserId": owner_user_id,
+        }
+        for row in rows
+    ]
+
+
 def select_scenario_profile(study_id: str) -> str:
     profiles = [
         SCENARIO_PROFILE_DOCUMENT_READINESS,
@@ -57,16 +70,24 @@ def select_scenario_profile(study_id: str) -> str:
 
 def replace_demo_operational_data_for_imported_study(
     study: Dict[str, Any],
+    owner_user_id: str,
 ) -> bool:
     study_id = study["studyId"]
     scenario_profile = select_scenario_profile(study_id)
 
     delete_existing_demo_operational_data_by_study_id(study_id)
 
-    demo_sites = build_demo_sites_for_imported_study(study)
-    demo_metrics = build_demo_monitoring_metrics_for_imported_study(
-        study,
-        scenario_profile,
+    demo_sites = attach_owner_user_id(
+        build_demo_sites_for_imported_study(study),
+        owner_user_id,
+    )
+
+    demo_metrics = attach_owner_user_id(
+        build_demo_monitoring_metrics_for_imported_study(
+            study,
+            scenario_profile,
+        ),
+        owner_user_id,
     )
 
     upsert_sites_to_supabase(demo_sites)
@@ -75,18 +96,25 @@ def replace_demo_operational_data_for_imported_study(
     create_demo_essential_documents_for_imported_study(
         study,
         scenario_profile,
+        owner_user_id,
     )
+
     create_demo_protocol_deviations_for_imported_study(
         study,
         scenario_profile,
+        owner_user_id,
     )
+
     create_demo_icf_data_for_imported_study(
         study,
         scenario_profile,
+        owner_user_id,
     )
+
     create_demo_delegation_training_data_for_imported_study(
         study,
         scenario_profile,
+        owner_user_id,
     )
 
     return True
@@ -496,6 +524,7 @@ def build_demo_essential_documents_for_site(
 def create_demo_essential_documents_for_imported_study(
     study: Dict[str, Any],
     scenario_profile: str,
+    owner_user_id: str,
 ) -> bool:
     study_id = study["studyId"]
 
@@ -511,6 +540,11 @@ def create_demo_essential_documents_for_imported_study(
                 scenario_profile=scenario_profile,
             )
         )
+
+    all_documents = attach_owner_user_id(
+        all_documents,
+        owner_user_id,
+    )
 
     upsert_essential_documents_to_supabase(all_documents)
 
@@ -689,11 +723,18 @@ def build_demo_protocol_deviations_for_imported_study(
 def create_demo_protocol_deviations_for_imported_study(
     study: Dict[str, Any],
     scenario_profile: str,
+    owner_user_id: str,
 ) -> bool:
     demo_deviations = build_demo_protocol_deviations_for_imported_study(
         study,
         scenario_profile,
     )
+
+    demo_deviations = attach_owner_user_id(
+        demo_deviations,
+        owner_user_id,
+    )
+
     upsert_protocol_deviations_to_supabase(demo_deviations)
 
     return True
@@ -844,11 +885,22 @@ def build_demo_subject_consents_for_imported_study(
 def create_demo_icf_data_for_imported_study(
     study: Dict[str, Any],
     scenario_profile: str,
+    owner_user_id: str,
 ) -> bool:
     icf_versions = build_demo_icf_versions_for_imported_study(study)
     consents = build_demo_subject_consents_for_imported_study(
         study,
         scenario_profile,
+    )
+
+    icf_versions = attach_owner_user_id(
+        icf_versions,
+        owner_user_id,
+    )
+
+    consents = attach_owner_user_id(
+        consents,
+        owner_user_id,
     )
 
     upsert_icf_versions_to_supabase(icf_versions)
@@ -1059,11 +1111,22 @@ def build_demo_delegation_training_records_for_imported_study(
 def create_demo_delegation_training_data_for_imported_study(
     study: Dict[str, Any],
     scenario_profile: str,
+    owner_user_id: str,
 ) -> bool:
     staff_members = build_demo_site_staff_for_imported_study(study)
     records = build_demo_delegation_training_records_for_imported_study(
         study,
         scenario_profile,
+    )
+
+    staff_members = attach_owner_user_id(
+        staff_members,
+        owner_user_id,
+    )
+
+    records = attach_owner_user_id(
+        records,
+        owner_user_id,
     )
 
     upsert_site_staff_to_supabase(staff_members)

@@ -11,6 +11,7 @@ def to_camel_case_icf_version(row: Dict[str, Any]) -> Dict[str, Any]:
         "irbApprovalDate": row["irb_approval_date"],
         "effectiveDate": row["effective_date"],
         "status": row["status"],
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -23,6 +24,7 @@ def to_camel_case_subject_consent(row: Dict[str, Any]) -> Dict[str, Any]:
         "signedIcfVersion": row["signed_icf_version"],
         "consentDate": row["consent_date"],
         "consentProcessNote": row.get("consent_process_note"),
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -76,6 +78,7 @@ def upsert_icf_versions_to_supabase(
             "irb_approval_date": item["irbApprovalDate"],
             "effective_date": item["effectiveDate"],
             "status": item["status"],
+            "owner_user_id": item.get("ownerUserId"),
         }
         for item in icf_versions
     ]
@@ -106,6 +109,7 @@ def upsert_subject_consents_to_supabase(
             "signed_icf_version": item["signedIcfVersion"],
             "consent_date": item["consentDate"],
             "consent_process_note": item.get("consentProcessNote"),
+            "owner_user_id": item.get("ownerUserId"),
         }
         for item in consents
     ]

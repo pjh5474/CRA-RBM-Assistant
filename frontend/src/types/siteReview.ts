@@ -2,6 +2,7 @@ import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 import { IcfVersionCheck } from "@/types/icf";
 import { MonitoringReportDraft } from "@/types/monitoringReport";
 import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
+import { DelegationTrainingCheck } from "@/types/delegationTraining";
 import { RiskSite } from "@/types/risk";
 
 export interface SiteReviewStudySummary {
@@ -26,5 +27,6 @@ export interface SiteReviewSummary {
 	protocolDeviations: ProtocolDeviationSummary;
 	icfVersionCheck: IcfVersionCheck;
 	monitoringReportDraft: MonitoringReportDraft;
+	delegationTrainingCheck: DelegationTrainingCheck;
 	modules: SiteReviewModule[];
 }

@@ -30,6 +30,8 @@ class StudyDetailResponse(BaseModel):
     visitSchedule: List[Dict[str, Any]]
     safetyReporting: Dict[str, Any]
     craFocusAreas: List[str]
+    ownerUserId: Optional[str] = None
+    isPublicDemo: bool = False
 
 
 class SiteResponse(BaseModel):

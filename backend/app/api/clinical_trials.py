@@ -36,4 +36,7 @@ async def import_external_clinical_trial(
     nct_id: str,
     current_user=Depends(require_authenticated_user),
 ):
-    return await import_clinical_trial_to_supabase(nct_id)
+    return await import_clinical_trial_to_supabase(
+        nct_id=nct_id,
+        owner_user_id=current_user["id"],
+    )

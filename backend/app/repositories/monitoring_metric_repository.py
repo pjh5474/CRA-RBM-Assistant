@@ -16,6 +16,7 @@ def to_camel_case_metric(row: Dict[str, Any]) -> Dict[str, Any]:
         "ipAccountabilityIssues": row["ip_accountability_issues"],
         "icfIssues": row["icf_issues"],
         "lastMonitoringVisitDate": row["last_monitoring_visit_date"],
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -66,6 +67,7 @@ def upsert_monitoring_metrics_to_supabase(
             "ip_accountability_issues": metric["ipAccountabilityIssues"],
             "icf_issues": metric["icfIssues"],
             "last_monitoring_visit_date": metric["lastMonitoringVisitDate"],
+            "owner_user_id": metric.get("ownerUserId"),
         }
         for metric in metrics
     ]

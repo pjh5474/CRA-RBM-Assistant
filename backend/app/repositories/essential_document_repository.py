@@ -15,6 +15,7 @@ def to_camel_case_document(row: Dict[str, Any]) -> Dict[str, Any]:
         "documentDate": row.get("document_date"),
         "expiryDate": row.get("expiry_date"),
         "comment": row.get("comment"),
+        "ownerUserId": row.get("owner_user_id"),
     }
 
 
@@ -56,6 +57,7 @@ def upsert_essential_documents_to_supabase(
             "document_date": document.get("documentDate"),
             "expiry_date": document.get("expiryDate"),
             "comment": document.get("comment"),
+            "owner_user_id": document.get("ownerUserId"),
         }
         for document in documents
     ]
