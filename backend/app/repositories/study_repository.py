@@ -23,6 +23,36 @@ def to_camel_case_study(row: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def get_accessible_studies_from_supabase(
+    owner_user_id: str | None = None,
+) -> List[Dict[str, Any]]:
+    supabase = get_supabase_client()
+
+    public_response = (
+        supabase.table("studies")
+        .select("*")
+        .eq("is_public_demo", True)
+        .order("study_id")
+        .execute()
+    )
+
+    studies_by_id = {row["study_id"]: row for row in public_response.data}
+
+    if owner_user_id:
+        owned_response = (
+            supabase.table("studies")
+            .select("*")
+            .eq("owner_user_id", owner_user_id)
+            .order("study_id")
+            .execute()
+        )
+
+        for row in owned_response.data:
+            studies_by_id[row["study_id"]] = row
+
+    return [to_camel_case_study(row) for row in studies_by_id.values()]
+
+
 def get_all_studies_from_supabase() -> List[Dict[str, Any]]:
     supabase = get_supabase_client()
 

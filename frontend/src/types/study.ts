@@ -4,6 +4,8 @@ export interface StudySummary {
 	phase: string;
 	indication: string;
 	sponsor: string;
+	ownerUserId?: string | null;
+	isPublicDemo?: boolean;
 }
 
 export interface StudyDetail {

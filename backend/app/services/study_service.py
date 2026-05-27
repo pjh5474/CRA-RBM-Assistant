@@ -5,12 +5,19 @@ from fastapi import HTTPException
 
 from app.repositories.site_repository import get_sites_by_study_id_from_supabase
 from app.repositories.study_repository import (
+    get_accessible_studies_from_supabase,
     get_all_studies_from_supabase,
     get_study_by_id_from_supabase,
 )
 from app.utils.data_loader import load_json_file
 
 DATA_SOURCE = os.getenv("DATA_SOURCE", "json")
+
+
+def get_accessible_studies(
+    owner_user_id: str | None = None,
+):
+    return get_accessible_studies_from_supabase(owner_user_id)
 
 
 def get_all_studies() -> List[Dict[str, Any]]:

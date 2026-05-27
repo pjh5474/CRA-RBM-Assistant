@@ -178,3 +178,17 @@ export function getDelegationTrainingCheck(
 		`/api/studies/${studyId}/sites/${siteId}/delegation-training-check`,
 	);
 }
+
+export function getAccessibleStudies(
+	accessToken?: string,
+): Promise<StudySummary[]> {
+	const options: RequestInit = {};
+
+	if (accessToken) {
+		options.headers = {
+			Authorization: `Bearer ${accessToken}`,
+		};
+	}
+
+	return fetchApi<StudySummary[]>("/api/accessible/studies", options);
+}

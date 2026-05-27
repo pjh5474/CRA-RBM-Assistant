@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from fastapi import Header, HTTPException
 
@@ -42,6 +42,34 @@ def require_authenticated_user(
             status_code=401,
             detail="Invalid or expired access token",
         )
+
+    return {
+        "id": user.id,
+        "email": user.email,
+    }
+
+
+def get_optional_authenticated_user(
+    authorization: str | None = Header(default=None),
+) -> Optional[Dict[str, Any]]:
+    if not authorization:
+        return None
+
+    if not authorization.startswith("Bearer "):
+        return None
+
+    token = authorization.replace("Bearer ", "", 1).strip()
+    supabase = get_supabase_client()
+
+    try:
+        response = supabase.auth.get_user(token)
+    except Exception:
+        return None
+
+    user = getattr(response, "user", None)
+
+    if not user:
+        return None
 
     return {
         "id": user.id,
