@@ -44,6 +44,19 @@ Deterministic scenario profiles provide:
 - Clear explanation of why a specific issue appears in a specific demo site
 - Better alignment with scenario-based testing
 
+## Delegation and Training Scenario
+
+This scenario is designed to demonstrate CRA review of whether site staff completed required training before delegated study tasks began.
+
+Example controlled issues:
+
+- Protocol training completed after delegation start date
+- Missing GCP training evidence
+- Training Log pending in essential document readiness review
+- Delegation Log missing or pending
+
+The purpose is to show how date consistency and training evidence review can be structured as a CRA monitoring workflow.
+
 ### Scenario profile assignment
 
 The current MVP assigns a scenario profile using the imported study ID.

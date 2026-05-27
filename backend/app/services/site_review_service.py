@@ -7,6 +7,7 @@ from app.services.icf_service import get_icf_version_check
 from app.services.monitoring_report_service import get_monitoring_report_draft
 from app.services.protocol_deviation_service import get_protocol_deviation_summary
 from app.services.study_service import get_risk_sites_by_study_id, get_study_by_id
+from app.services.delegation_training_service import get_delegation_training_check
 
 
 def get_site_risk_summary(study_id: str, site_id: str) -> Dict[str, Any]:
@@ -28,6 +29,7 @@ def build_site_review_modules(
     essential_documents: Dict[str, Any],
     protocol_deviations: Dict[str, Any],
     icf_version_check: Dict[str, Any],
+    delegation_training_check: Dict[str, Any],
     monitoring_report_draft: Dict[str, Any],
 ) -> List[Dict[str, str]]:
     return [
@@ -55,6 +57,12 @@ def build_site_review_modules(
             "href": f"/studies/{study_id}/sites/{site_id}/icf-version-check",
             "statusLabel": f"{icf_version_check['issueConsents']} issue(s)",
         },
+        {
+            "title": "Delegation & Training Check",
+            "description": "Review missing GCP and protocol training records and training completed after delegation start date.",
+            "href": f"/studies/{study_id}/sites/{site_id}/delegation-training-check",
+            "statusLabel": f"{delegation_training_check['issueRecords']} issue(s)",
+        },
     ]
 
 
@@ -66,6 +74,7 @@ def get_site_review_summary(study_id: str, site_id: str) -> Dict[str, Any]:
     protocol_deviations = get_protocol_deviation_summary(study_id, site_id)
     icf_version_check = get_icf_version_check(study_id, site_id)
     monitoring_report_draft = get_monitoring_report_draft(study_id, site_id)
+    delegation_training_check = get_delegation_training_check(study_id, site_id)
 
     return {
         "study": {
@@ -80,6 +89,7 @@ def get_site_review_summary(study_id: str, site_id: str) -> Dict[str, Any]:
         "protocolDeviations": protocol_deviations,
         "icfVersionCheck": icf_version_check,
         "monitoringReportDraft": monitoring_report_draft,
+        "delegationTrainingCheck": delegation_training_check,
         "modules": build_site_review_modules(
             study_id=study_id,
             site_id=site_id,
@@ -87,5 +97,6 @@ def get_site_review_summary(study_id: str, site_id: str) -> Dict[str, Any]:
             protocol_deviations=protocol_deviations,
             icf_version_check=icf_version_check,
             monitoring_report_draft=monitoring_report_draft,
+            delegation_training_check=delegation_training_check,
         ),
     }

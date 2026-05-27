@@ -13,6 +13,7 @@ import { EssentialDocumentReadiness } from "@/types/essentialDocument";
 import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
 import { IcfVersionCheck } from "@/types/icf";
 import { SiteReviewSummary } from "@/types/siteReview";
+import { DelegationTrainingCheck } from "@/types/delegationTraining";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -166,5 +167,14 @@ export function getSiteReviewSummary(
 ): Promise<SiteReviewSummary> {
 	return fetchApi<SiteReviewSummary>(
 		`/api/studies/${studyId}/sites/${siteId}/review-summary`,
+	);
+}
+
+export function getDelegationTrainingCheck(
+	studyId: string,
+	siteId: string,
+): Promise<DelegationTrainingCheck> {
+	return fetchApi<DelegationTrainingCheck>(
+		`/api/studies/${studyId}/sites/${siteId}/delegation-training-check`,
 	);
 }

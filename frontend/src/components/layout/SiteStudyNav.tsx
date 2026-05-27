@@ -9,10 +9,10 @@ export function SiteStudyNav({ studyId, siteId }: SiteStudyNavProps) {
 	return (
 		<div className="flex flex-wrap gap-4">
 			<Link
-				href={`/studies/${studyId}/sites/${siteId}`}
+				href={`/studies/${studyId}`}
 				className="text-sm font-medium text-blue-700 hover:text-blue-800"
 			>
-				← Back to site review
+				← Back to study overview
 			</Link>
 
 			<Link

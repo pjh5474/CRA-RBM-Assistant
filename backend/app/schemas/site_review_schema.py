@@ -5,6 +5,7 @@ from app.schemas.essential_document_schema import EssentialDocumentReadinessResp
 from app.schemas.icf_schema import IcfVersionCheckResponse
 from app.schemas.monitoring_report_schema import MonitoringReportDraftResponse
 from app.schemas.protocol_deviation_schema import ProtocolDeviationSummaryResponse
+from app.schemas.delegation_training_schema import DelegationTrainingCheckResponse
 
 
 class SiteReviewRiskSummaryResponse(BaseModel):
@@ -43,5 +44,6 @@ class SiteReviewSummaryResponse(BaseModel):
     essentialDocuments: EssentialDocumentReadinessResponse
     protocolDeviations: ProtocolDeviationSummaryResponse
     icfVersionCheck: IcfVersionCheckResponse
+    delegationTrainingCheck: DelegationTrainingCheckResponse
     monitoringReportDraft: MonitoringReportDraftResponse
-    modules: List[SiteReviewModuleResponse]
+    modules: List[SiteReviewModuleResponse] = []

@@ -7,6 +7,7 @@ from app.services.essential_document_service import get_essential_document_readi
 from app.services.icf_service import get_icf_version_check
 from app.services.protocol_deviation_service import get_protocol_deviation_summary
 from app.services.study_service import get_risk_sites_by_study_id, get_study_by_id
+from app.services.delegation_training_service import get_delegation_training_check
 
 
 RISK_FACTOR_CATEGORY_MAP = {
@@ -197,19 +198,62 @@ def build_icf_findings(
     return findings
 
 
+def build_delegation_training_findings(
+    delegation_training_check: Dict[str, Any],
+) -> List[Dict[str, str]]:
+    findings: List[Dict[str, str]] = []
+
+    if delegation_training_check["missingTrainingRecords"] > 0:
+        findings.append(
+            {
+                "category": "Delegation and Training",
+                "finding": (
+                    f"{delegation_training_check['missingTrainingRecords']} "
+                    "delegation/training record(s) have missing GCP or protocol "
+                    "training evidence."
+                ),
+                "recommendedAction": (
+                    "Review delegation log and training evidence with site staff. "
+                    "Confirm whether missing training documentation should be filed "
+                    "or whether retraining is required."
+                ),
+            }
+        )
+
+    if delegation_training_check["trainingAfterDelegationRecords"] > 0:
+        findings.append(
+            {
+                "category": "Delegation and Training",
+                "finding": (
+                    f"{delegation_training_check['trainingAfterDelegationRecords']} "
+                    "record(s) show training completed after delegation start date."
+                ),
+                "recommendedAction": (
+                    "Reconcile delegation start date against GCP/protocol training "
+                    "completion dates and determine whether delegation timing requires "
+                    "documentation correction or site retraining."
+                ),
+            }
+        )
+
+    return findings
+
+
 def build_report_summary(
     study: Dict[str, Any],
     site: Dict[str, Any],
     essential_documents: Dict[str, Any],
     protocol_deviations: Dict[str, Any],
     icf_version_check: Dict[str, Any],
+    delegation_training_check: Dict[str, Any],
 ) -> str:
     return (
         f"Site {site['siteName']} was classified as {site['riskLevel']} risk "
         f"with a risk score of {site['riskScore']} for study {study['studyId']}. "
         f"Essential document readiness was {essential_documents['readinessScore']}%. "
-        f"The site has {protocol_deviations['openDeviations']} open protocol deviation(s) "
-        f"and {icf_version_check['issueConsents']} informed consent version issue(s). "
+        f"The site has {protocol_deviations['openDeviations']} open protocol deviation(s), "
+        f"{icf_version_check['issueConsents']} informed consent version issue(s), "
+        f"and {delegation_training_check['issueRecords']} delegation/training issue(s). "
         "This monitoring report draft summarizes key CRA follow-up considerations "
         "based on synthetic monitoring, document readiness, deviation, and consent data."
     )
@@ -224,6 +268,7 @@ def build_follow_up_actions(
         "Safety Reporting",
         "Informed Consent",
         "Protocol Compliance",
+        "Delegation and Training",
     }
 
     for finding in findings:
@@ -264,12 +309,14 @@ def get_monitoring_report_draft(
     essential_documents = get_essential_document_readiness(study_id, site_id)
     protocol_deviations = get_protocol_deviation_summary(study_id, site_id)
     icf_version_check = get_icf_version_check(study_id, site_id)
+    delegation_training_check = get_delegation_training_check(study_id, site_id)
 
     findings = (
         build_risk_factor_findings(target_site["riskFactors"])
         + build_essential_document_findings(essential_documents)
         + build_protocol_deviation_findings(protocol_deviations)
         + build_icf_findings(icf_version_check)
+        + build_delegation_training_findings(delegation_training_check)
     )
 
     return {
@@ -287,6 +334,7 @@ def get_monitoring_report_draft(
             essential_documents=essential_documents,
             protocol_deviations=protocol_deviations,
             icf_version_check=icf_version_check,
+            delegation_training_check=delegation_training_check,
         ),
         "riskSummary": {
             "riskScore": target_site["riskScore"],
@@ -313,6 +361,17 @@ def get_monitoring_report_draft(
             "totalConsents": icf_version_check["totalConsents"],
             "validConsents": icf_version_check["validConsents"],
             "issueConsents": icf_version_check["issueConsents"],
+        },
+        "delegationTrainingSummary": {
+            "totalRecords": delegation_training_check["totalRecords"],
+            "validRecords": delegation_training_check["validRecords"],
+            "issueRecords": delegation_training_check["issueRecords"],
+            "missingTrainingRecords": delegation_training_check[
+                "missingTrainingRecords"
+            ],
+            "trainingAfterDelegationRecords": delegation_training_check[
+                "trainingAfterDelegationRecords"
+            ],
         },
         "findings": findings,
         "followUpActions": build_follow_up_actions(findings),

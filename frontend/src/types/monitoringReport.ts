@@ -34,6 +34,14 @@ export interface MonitoringReportIcfSummary {
 	issueConsents: number;
 }
 
+export interface MonitoringReportDelegationTrainingSummary {
+	totalRecords: number;
+	validRecords: number;
+	issueRecords: number;
+	missingTrainingRecords: number;
+	trainingAfterDelegationRecords: number;
+}
+
 export interface MonitoringReportFollowUpAction {
 	category: string;
 	action: string;
@@ -54,6 +62,7 @@ export interface MonitoringReportDraft {
 	essentialDocumentSummary: MonitoringReportEssentialDocumentSummary;
 	protocolDeviationSummary: MonitoringReportProtocolDeviationSummary;
 	icfSummary: MonitoringReportIcfSummary;
+	delegationTrainingSummary: MonitoringReportDelegationTrainingSummary;
 	findings: MonitoringReportFinding[];
 	followUpActions: MonitoringReportFollowUpAction[];
 	limitations: string[];

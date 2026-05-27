@@ -10,7 +10,7 @@ export function SiteReviewSummaryGrid({ review }: SiteReviewSummaryGridProps) {
 	const issueCount = getTotalFollowUpSignals(review);
 
 	return (
-		<section className="grid gap-4 md:grid-cols-5">
+		<section className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
 			<SummaryCard
 				title="Risk Factors"
 				value={review.site.riskFactors.length}
@@ -26,6 +26,10 @@ export function SiteReviewSummaryGrid({ review }: SiteReviewSummaryGridProps) {
 			<SummaryCard
 				title="ICF Issues"
 				value={review.icfVersionCheck.issueConsents}
+			/>
+			<SummaryCard
+				title="Training Issues"
+				value={review.delegationTrainingCheck.issueRecords}
 			/>
 			<SummaryCard title="Total Follow-up Signals" value={issueCount} />
 		</section>

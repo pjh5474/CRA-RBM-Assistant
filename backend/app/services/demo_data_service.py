@@ -19,6 +19,9 @@ from app.repositories.delegation_training_repository import (
     upsert_site_staff_to_supabase,
 )
 from app.utils.profile_metric_builder import build_profile_metric
+from app.repositories.demo_data_repository import (
+    delete_existing_demo_operational_data_by_study_id,
+)
 
 SCENARIO_PROFILE_DOCUMENT_READINESS = "DOCUMENT_READINESS_RISK"
 SCENARIO_PROFILE_PROTOCOL_DEVIATION = "PROTOCOL_DEVIATION_RISK"
@@ -52,10 +55,13 @@ def select_scenario_profile(study_id: str) -> str:
     return profiles[index]
 
 
-def create_demo_operational_data_for_imported_study(
+def replace_demo_operational_data_for_imported_study(
     study: Dict[str, Any],
 ) -> bool:
-    scenario_profile = select_scenario_profile(study["studyId"])
+    study_id = study["studyId"]
+    scenario_profile = select_scenario_profile(study_id)
+
+    delete_existing_demo_operational_data_by_study_id(study_id)
 
     demo_sites = build_demo_sites_for_imported_study(study)
     demo_metrics = build_demo_monitoring_metrics_for_imported_study(

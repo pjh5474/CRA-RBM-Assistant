@@ -101,6 +101,33 @@
 | effectiveDate   | Date when the ICF version became effective |
 | status          | Version status: Active or Superseded       |
 
+## SiteStaff
+
+| Field     | Description                                               |
+| --------- | --------------------------------------------------------- |
+| staffId   | Unique site staff identifier                              |
+| studyId   | Related study identifier                                  |
+| siteId    | Related site identifier                                   |
+| staffName | Synthetic site staff name                                 |
+| role      | Staff role, such as Study Coordinator or Sub-Investigator |
+| isActive  | Whether the staff member is active                        |
+
+## DelegationTrainingRecord
+
+| Field                | Description                                             |
+| -------------------- | ------------------------------------------------------- |
+| recordId             | Unique delegation/training record identifier            |
+| studyId              | Related study identifier                                |
+| siteId               | Related site identifier                                 |
+| staffId              | Related site staff identifier                           |
+| delegatedTask        | Delegated study task                                    |
+| delegationStartDate  | Date when delegated task responsibility started         |
+| delegationEndDate    | Date when delegation ended, if applicable               |
+| gcpTrainingDate      | Date of GCP training completion                         |
+| protocolTrainingDate | Date of protocol training completion                    |
+| trainingStatus       | Training status: Complete, Missing, Expired, or Pending |
+| comment              | CRA-oriented review comment or scenario note            |
+
 ## SubjectConsent
 
 | Field              | Description                                          |

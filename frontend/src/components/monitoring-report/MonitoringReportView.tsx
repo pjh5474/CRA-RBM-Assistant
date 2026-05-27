@@ -21,7 +21,7 @@ export function MonitoringReportView({ report }: MonitoringReportViewProps) {
 
 				<MonitoringReportHeader report={report} />
 
-				<section className="grid gap-4 md:grid-cols-4">
+				<section className="grid gap-4 md:grid-cols-5">
 					<SummaryCard
 						title="Document Readiness"
 						value={`${report.essentialDocumentSummary.readinessScore}%`}
@@ -33,6 +33,10 @@ export function MonitoringReportView({ report }: MonitoringReportViewProps) {
 					<SummaryCard
 						title="ICF Issues"
 						value={report.icfSummary.issueConsents}
+					/>
+					<SummaryCard
+						title="Training Issues"
+						value={report.delegationTrainingSummary.issueRecords}
 					/>
 					<SummaryCard
 						title="Follow-up Actions"
@@ -58,7 +62,6 @@ export function MonitoringReportView({ report }: MonitoringReportViewProps) {
 								}`,
 							]}
 						/>
-
 						<ReviewSummaryCard
 							title="Essential Documents"
 							items={[
@@ -69,7 +72,6 @@ export function MonitoringReportView({ report }: MonitoringReportViewProps) {
 								`Expired: ${report.essentialDocumentSummary.expiredDocuments}`,
 							]}
 						/>
-
 						<ReviewSummaryCard
 							title="Protocol Deviations"
 							items={[
@@ -80,13 +82,22 @@ export function MonitoringReportView({ report }: MonitoringReportViewProps) {
 								`Critical: ${report.protocolDeviationSummary.criticalDeviations}`,
 							]}
 						/>
-
 						<ReviewSummaryCard
 							title="ICF Version Check"
 							items={[
 								`Total consents: ${report.icfSummary.totalConsents}`,
 								`Valid consents: ${report.icfSummary.validConsents}`,
 								`Issue consents: ${report.icfSummary.issueConsents}`,
+							]}
+						/>
+						<ReviewSummaryCard
+							title="Delegation & Training"
+							items={[
+								`Total records: ${report.delegationTrainingSummary.totalRecords}`,
+								`Valid records: ${report.delegationTrainingSummary.validRecords}`,
+								`Issue records: ${report.delegationTrainingSummary.issueRecords}`,
+								`Missing training: ${report.delegationTrainingSummary.missingTrainingRecords}`,
+								`Training after delegation: ${report.delegationTrainingSummary.trainingAfterDelegationRecords}`,
 							]}
 						/>
 					</div>

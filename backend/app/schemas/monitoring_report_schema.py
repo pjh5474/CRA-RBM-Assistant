@@ -38,6 +38,14 @@ class MonitoringReportIcfSummaryResponse(BaseModel):
     issueConsents: int
 
 
+class MonitoringReportDelegationTrainingSummaryResponse(BaseModel):
+    totalRecords: int
+    validRecords: int
+    issueRecords: int
+    missingTrainingRecords: int
+    trainingAfterDelegationRecords: int
+
+
 class MonitoringReportFollowUpActionResponse(BaseModel):
     category: str
     action: str
@@ -58,6 +66,7 @@ class MonitoringReportDraftResponse(BaseModel):
     essentialDocumentSummary: MonitoringReportEssentialDocumentSummaryResponse
     protocolDeviationSummary: MonitoringReportProtocolDeviationSummaryResponse
     icfSummary: MonitoringReportIcfSummaryResponse
+    delegationTrainingSummary: MonitoringReportDelegationTrainingSummaryResponse
     findings: List[MonitoringReportFindingResponse]
     followUpActions: List[MonitoringReportFollowUpActionResponse]
     limitations: List[str]

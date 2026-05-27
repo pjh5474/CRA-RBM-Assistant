@@ -7,7 +7,7 @@ from app.repositories.study_repository import (
     upsert_study_to_supabase,
 )
 from app.services.demo_data_service import (
-    create_demo_operational_data_for_imported_study,
+    replace_demo_operational_data_for_imported_study,
 )
 
 CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
@@ -309,7 +309,7 @@ async def import_clinical_trial_to_supabase(nct_id: str) -> Dict[str, Any]:
 
     imported_study = upsert_study_to_supabase(internal_study)
 
-    demo_data_created = create_demo_operational_data_for_imported_study(imported_study)
+    demo_data_created = replace_demo_operational_data_for_imported_study(imported_study)
 
     status = "updated" if existed_before_import else "created"
 

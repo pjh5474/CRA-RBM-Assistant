@@ -6,6 +6,7 @@ export function getTotalFollowUpSignals(review: SiteReviewSummary): number {
 		review.essentialDocuments.pendingDocuments +
 		review.essentialDocuments.expiredDocuments +
 		review.protocolDeviations.openDeviations +
-		review.icfVersionCheck.issueConsents
+		review.icfVersionCheck.issueConsents +
+		review.delegationTrainingCheck.issueRecords
 	);
 }

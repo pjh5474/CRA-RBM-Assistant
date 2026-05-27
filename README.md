@@ -206,6 +206,17 @@ Checks whether subject consent records are consistent with the ICF version that 
 
 This feature demonstrates date-based version consistency validation, which connects data quality logic with CRA informed consent review.
 
+### Delegation & Training Log Check
+
+Checks whether delegated site staff completed GCP and protocol training before their delegation start date.
+
+This feature demonstrates CRA-oriented review of delegation log and training evidence consistency, including:
+
+- Missing GCP training evidence
+- Missing protocol training evidence
+- GCP training completed after delegation start date
+- Protocol training completed after delegation start date
+
 ### Authentication and Import Protection
 
 Supabase Auth is used to protect write operations.
@@ -512,13 +523,14 @@ Backend routes are organized under `backend/app/api/` (for example: `studies`, `
 
 ### Site Monitoring APIs
 
-| Method | Endpoint                                                        | Description                              |
-| ------ | --------------------------------------------------------------- | ---------------------------------------- |
-| GET    | /api/studies/{study_id}/sites/{site_id}/review-summary          | Get integrated site review summary       |
-| GET    | /api/studies/{study_id}/sites/{site_id}/monitoring-report-draft | Get enhanced monitoring report draft     |
-| GET    | /api/studies/{study_id}/sites/{site_id}/essential-documents     | Get essential document readiness summary |
-| GET    | /api/studies/{study_id}/sites/{site_id}/protocol-deviations     | Get protocol deviation summary           |
-| GET    | /api/studies/{study_id}/sites/{site_id}/icf-version-check       | Get ICF version consistency check        |
+| Method | Endpoint                                                          | Description                                   |
+| ------ | ----------------------------------------------------------------- | --------------------------------------------- |
+| GET    | /api/studies/{study_id}/sites/{site_id}/review-summary            | Get integrated site review summary            |
+| GET    | /api/studies/{study_id}/sites/{site_id}/monitoring-report-draft   | Get enhanced monitoring report draft          |
+| GET    | /api/studies/{study_id}/sites/{site_id}/essential-documents       | Get essential document readiness summary      |
+| GET    | /api/studies/{study_id}/sites/{site_id}/protocol-deviations       | Get protocol deviation summary                |
+| GET    | /api/studies/{study_id}/sites/{site_id}/icf-version-check         | Get ICF version consistency check             |
+| GET    | /api/studies/{study_id}/sites/{site_id}/delegation-training-check | Get delegation and training consistency check |
 
 ## 14. How to Run Locally
 
