@@ -6,6 +6,7 @@ from app.api import (
     checklists,
     clinical_trials,
     health,
+    konect,
     risk,
     site_monitoring,
     studies,
@@ -21,3 +22,4 @@ api_router.include_router(checklists.router)
 api_router.include_router(clinical_trials.router)
 api_router.include_router(audit_logs.router)
 api_router.include_router(alerts.router)
+api_router.include_router(konect.router)
