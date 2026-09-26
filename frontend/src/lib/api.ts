@@ -14,6 +14,12 @@ import { ProtocolDeviationSummary } from "@/types/protocolDeviation";
 import { IcfVersionCheck } from "@/types/icf";
 import { SiteReviewSummary } from "@/types/siteReview";
 import { DelegationTrainingCheck } from "@/types/delegationTraining";
+import {
+	ConditionTrend,
+	CountryTrial,
+	TrialOverview,
+	YearlyTrial,
+} from "@/types/analytics";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -191,4 +197,34 @@ export function getAccessibleStudies(
 	}
 
 	return fetchApi<StudySummary[]>("/api/accessible/studies", options);
+}
+
+export function getTrialOverview(): Promise<TrialOverview> {
+	return fetchApi<TrialOverview>("/api/analytics/overview");
+}
+
+export function getYearlyTrials(): Promise<YearlyTrial[]> {
+	return fetchApi<YearlyTrial[]>("/api/analytics/yearly");
+}
+
+export function getCountryTrials(limit = 15): Promise<CountryTrial[]> {
+	const params = new URLSearchParams({
+		limit: String(limit),
+	});
+
+	return fetchApi<CountryTrial[]>(
+		`/api/analytics/countries?${params.toString()}`,
+	);
+}
+
+export function getConditionTrend(
+	condition: string,
+): Promise<ConditionTrend[]> {
+	const params = new URLSearchParams({
+		condition,
+	});
+
+	return fetchApi<ConditionTrend[]>(
+		`/api/analytics/conditions?${params.toString()}`,
+	);
 }

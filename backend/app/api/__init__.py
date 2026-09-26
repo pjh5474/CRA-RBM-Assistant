@@ -10,6 +10,7 @@ from app.api import (
     risk,
     site_monitoring,
     studies,
+    analytics,
 )
 
 api_router = APIRouter()
@@ -23,3 +24,4 @@ api_router.include_router(clinical_trials.router)
 api_router.include_router(audit_logs.router)
 api_router.include_router(alerts.router)
 api_router.include_router(konect.router)
+api_router.include_router(analytics.router)
