@@ -13,6 +13,7 @@ class RegistryStudySummaryResponse(BaseModel):
     enrollmentCount: int | None = None
 
     startDate: date | None = None
+    lastUpdateDate: date | None = None
     completionDate: date | None = None
 
     conditions: list[str] = Field(default_factory=list)
