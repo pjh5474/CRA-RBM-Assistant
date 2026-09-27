@@ -7,3 +7,5 @@ httpx
 curl-cffi
 google-auth
 google-cloud-bigquery
+databricks-sql-connector>=3.0.0
+pyarrow

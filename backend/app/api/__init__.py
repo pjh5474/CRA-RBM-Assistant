@@ -11,6 +11,7 @@ from app.api import (
     site_monitoring,
     studies,
     analytics,
+    registry_studies,
 )
 
 api_router = APIRouter()
@@ -25,3 +26,4 @@ api_router.include_router(audit_logs.router)
 api_router.include_router(alerts.router)
 api_router.include_router(konect.router)
 api_router.include_router(analytics.router)
+api_router.include_router(registry_studies.router)
