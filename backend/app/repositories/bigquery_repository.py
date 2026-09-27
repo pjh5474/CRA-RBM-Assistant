@@ -17,47 +17,64 @@ class BigQueryRepository:
     def __init__(self):
         self.client = get_bigquery_client()
 
+    # def get_overview(self) -> dict:
+    #     query = f"""
+    #     SELECT
+    #         SUM(study_count) AS total_trials,
+
+    #         SUM(
+    #             CASE
+    #                 WHEN study_type = 'INTERVENTIONAL'
+    #                 THEN study_count
+    #                 ELSE 0
+    #             END
+    #         ) AS interventional_trials,
+
+    #         SUM(
+    #             CASE
+    #                 WHEN study_type = 'OBSERVATIONAL'
+    #                 THEN study_count
+    #                 ELSE 0
+    #             END
+    #         ) AS observational_trials,
+
+    #         SUM(
+    #             CASE
+    #                 WHEN study_type NOT IN (
+    #                     'INTERVENTIONAL',
+    #                     'OBSERVATIONAL'
+    #                 )
+    #                 THEN study_count
+    #                 ELSE 0
+    #             END
+    #         ) AS other_trials,
+
+    #         MAX(
+    #             CASE
+    #                 WHEN study_year <= EXTRACT(YEAR FROM CURRENT_DATE())
+    #                 THEN study_year
+    #             END
+    #         ) AS latest_year
+
+    #     FROM {_table("gold_yearly_summary")}
+    #     WHERE study_year IS NOT NULL
+    #     """
+
+    #     row = next(iter(self.client.query(query).result()))
+
+    #     return dict(row.items())
+
     def get_overview(self) -> dict:
-        query = f"""
+        query = """
         SELECT
-            SUM(study_count) AS total_trials,
-
-            SUM(
-                CASE
-                    WHEN study_type = 'INTERVENTIONAL'
-                    THEN study_count
-                    ELSE 0
-                END
-            ) AS interventional_trials,
-
-            SUM(
-                CASE
-                    WHEN study_type = 'OBSERVATIONAL'
-                    THEN study_count
-                    ELSE 0
-                END
-            ) AS observational_trials,
-
-            SUM(
-                CASE
-                    WHEN study_type NOT IN (
-                        'INTERVENTIONAL',
-                        'OBSERVATIONAL'
-                    )
-                    THEN study_count
-                    ELSE 0
-                END
-            ) AS other_trials,
-
-            MAX(
-                CASE
-                    WHEN study_year <= EXTRACT(YEAR FROM CURRENT_DATE())
-                    THEN study_year
-                END
-            ) AS latest_year
-
-        FROM {_table("gold_yearly_summary")}
-        WHERE study_year IS NOT NULL
+            total_trials,
+            interventional_trials,
+            observational_trials,
+            other_trials,
+            latest_year
+        FROM
+            `nimble-crane-431005-f8.clinical_trials_dbt.mart_trial_overview`
+        LIMIT 1
         """
 
         row = next(iter(self.client.query(query).result()))
