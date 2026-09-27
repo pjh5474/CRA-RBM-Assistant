@@ -2,97 +2,205 @@
 
 ## Purpose
 
-This project does not use real patient data, real subject data, confidential sponsor protocol, or real site performance data.
+CRA-RBM Assistant does not use real patient data, real subject data, confidential sponsor protocol, or real site performance data.
 
-Instead, it uses scenario-based synthetic operational data to demonstrate CRA monitoring review logic.
+Instead, it uses **scenario-based synthetic operational data** to demonstrate CRA monitoring review logic after a public registry study is imported into the internal workspace.
+
+Public registry metadata and synthetic operational data are intentionally separated.
+
+```text
+ClinicalTrials.gov-derived Registry Data
+              ↓
+        Imported Study
+              ↓
+Synthetic Operational Scenario
+              ↓
+CRA Review / Risk / Follow-up
+```
+
+The synthetic scenario is not intended to represent the actual operational status or risk of the imported ClinicalTrials.gov study.
+
+---
 
 ## Scenario Design Principles
 
-- Reflect common CRA review areas
-- Use controlled synthetic issues
-- Map each issue to monitoring review workflow
-- Avoid real patient/site/sponsor data
-- Support dashboard, risk review, and report draft generation
+- reflect common CRA review areas
+- use controlled synthetic issues
+- keep scenarios reproducible
+- map each issue to a review workflow
+- avoid real patient / site / sponsor data
+- support dashboards, risk review, and report drafts
+- never present synthetic findings as public registry facts
 
-## Scenario Examples
+---
 
-| Scenario                   | Synthetic Data Design                                  | CRA Review Purpose                                 |
-| -------------------------- | ------------------------------------------------------ | -------------------------------------------------- |
-| Outdated ICF version       | Subject signed ICF v1.0 after v2.0 became effective    | Detect informed consent version consistency issue  |
-| Visit window deviation     | Visit performed outside the expected window            | Demonstrate protocol compliance review             |
-| Missing essential document | Delegation Log or IP Accountability Log marked Missing | Demonstrate site file readiness review             |
-| Expired GCP certificate    | GCP certificate marked Expired                         | Demonstrate training/qualification evidence review |
-| SAE reporting delay        | SAE delay count and deviation record added             | Demonstrate safety reporting follow-up             |
+## Why Deterministic Scenarios Are Used
 
-## Scenario Profile Generation
+Imported studies are assigned a deterministic scenario profile based on `studyId`.
 
-Imported studies are assigned a deterministic scenario profile based on their study ID.
+This is intentionally different from fully random demo-data generation.
 
-This is not random demo data generation. The purpose is to keep the scenario reproducible while allowing different imported studies to demonstrate different CRA monitoring risk patterns.
+Deterministic profiles provide:
 
-For example, the same NCT ID will always generate the same scenario profile, but different NCT IDs may generate different profiles.
-
-### Why deterministic profiles are used
-
-Fully random data generation was intentionally avoided because it can make testing, screenshots, documentation, and interview explanations inconsistent.
-
-Deterministic scenario profiles provide:
-
-- Reproducible demo data
-- Stable screenshots and portfolio examples
-- Different CRA monitoring risk scenarios across imported studies
-- Clear explanation of why a specific issue appears in a specific demo site
-- Better alignment with scenario-based testing
-
-## Delegation and Training Scenario
-
-This scenario is designed to demonstrate CRA review of whether site staff completed required training before delegated study tasks began.
-
-Example controlled issues:
-
-- Protocol training completed after delegation start date
-- Missing GCP training evidence
-- Training Log pending in essential document readiness review
-- Delegation Log missing or pending
-
-The purpose is to show how date consistency and training evidence review can be structured as a CRA monitoring workflow.
-
-### Scenario profile assignment
-
-The current MVP assigns a scenario profile using the imported study ID.
+- reproducible demo data
+- stable screenshots
+- consistent interview explanations
+- repeatable testing
+- different review patterns across imported studies
+- predictable downstream report output
 
 Conceptually:
 
 ```text
-scenario_profile = profile_list[sum(character codes of studyId) % number_of_profiles]
+scenario_profile =
+    profile_list[
+        sum(character codes of studyId)
+        % number_of_profiles
+    ]
 ```
 
-This simple deterministic assignment method is used only for portfolio demonstration. It is not intended to represent real clinical trial risk prediction.
+This method is used only for portfolio demonstration.
 
-### Scenario profiles
+It is not a risk-prediction algorithm.
 
-| Scenario Profile           | Main Review Focus                                       | Example Signals                                                                    |
-| -------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `DOCUMENT_READINESS_RISK`  | Essential document readiness and site file completeness | Missing Delegation Log, expired GCP certificate, pending Approved ICF              |
-| `PROTOCOL_DEVIATION_RISK`  | Protocol compliance and deviation follow-up             | Visit window deviation, missing assessment, open major deviation                   |
-| `ICF_VERSION_RISK`         | Informed consent version consistency                    | Subject signed outdated ICF version after newer version became effective           |
-| `DELEGATION_TRAINING_RISK` | Delegation and training evidence consistency            | Protocol training after delegation start date, missing GCP training evidence       |
-| `BALANCED_HIGH_RISK`       | Multiple risk signals across site operations            | Query aging, SAE reporting delay, missing documents, protocol deviation, ICF issue |
+---
 
-### How scenario profiles affect generated data
+## Scenario Examples
 
-Each scenario profile can influence the following synthetic operational data:
+| Scenario                   | Synthetic Data Design                                     | CRA Review Purpose                       |
+| -------------------------- | --------------------------------------------------------- | ---------------------------------------- |
+| Outdated ICF version       | Subject signed ICF v1.0 after v2.0 became effective       | Consent version consistency review       |
+| Visit window deviation     | Visit occurred outside the expected visit window          | Protocol compliance review               |
+| Missing essential document | Delegation Log or IP Accountability Log marked missing    | Site file readiness review               |
+| Expired GCP certificate    | GCP certificate marked expired                            | Training / qualification evidence review |
+| SAE reporting delay        | Synthetic delay signal and related deviation              | Safety reporting follow-up               |
+| Delegation before training | Protocol or GCP training completed after delegation start | Delegation / training consistency review |
+| Query aging                | Open query remains unresolved beyond scenario threshold   | Data-cleaning follow-up                  |
+| Multiple concurrent issues | Several indicators are triggered in one site              | Integrated risk-based review             |
 
-- Monitoring metrics
-- Essential document records
-- Protocol deviation records
-- ICF version and subject consent records
-- Delegation and training records
+---
+
+## Scenario Profiles
+
+| Scenario Profile           | Main Review Focus              | Example Signals                                                       |
+| -------------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| `DOCUMENT_READINESS_RISK`  | Essential document readiness   | Missing Delegation Log, expired GCP certificate, pending Approved ICF |
+| `PROTOCOL_DEVIATION_RISK`  | Protocol compliance            | Visit-window deviation, missing assessment, open major deviation      |
+| `ICF_VERSION_RISK`         | Informed consent consistency   | Outdated ICF used after newer version became effective                |
+| `DELEGATION_TRAINING_RISK` | Delegation / training evidence | Training after delegation start, missing GCP evidence                 |
+| `BALANCED_HIGH_RISK`       | Multiple operational areas     | Query aging, safety delay, missing documents, deviation, ICF issue    |
+
+---
+
+## Delegation and Training Scenario
+
+This scenario demonstrates whether synthetic site staff completed required training before delegated study tasks began.
+
+Controlled issues may include:
+
+- protocol training completed after delegation start
+- missing GCP training evidence
+- Training Log pending
+- Delegation Log missing or pending
+
+The purpose is to demonstrate cross-record date and evidence consistency checks.
+
+---
+
+## How Profiles Affect Generated Data
+
+A profile can influence:
+
+- monitoring metrics
+- essential document records
+- protocol deviation records
+- ICF versions
+- subject consent records
+- delegation records
+- training records
+- risk factors
 - Site Review Hub summary
-- Monitoring Report Draft findings and follow-up actions
+- CRA follow-up actions
+- Monitoring Report Draft findings
 
-### Important limitation
+This allows one imported public study to be reused across multiple CRA-RBM workflows without implying that the public study actually has those operational issues.
 
-The scenario profile does not predict real study risk.
+---
 
-It only controls which synthetic operational scenario is generated after a public study is imported. The goal is to demonstrate CRA review logic, not to assess the real-world risk of a ClinicalTrials.gov study.
+## Registry Data vs Synthetic Data
+
+This distinction is fundamental.
+
+### Registry Facts
+
+Examples:
+
+- NCT ID
+- title
+- phase
+- status
+- conditions
+- interventions
+- outcomes
+- eligibility criteria
+- study locations
+
+These come from the ClinicalTrials.gov-derived data platform.
+
+### Synthetic Operational Data
+
+Examples:
+
+- high-risk site classification
+- query aging
+- SAE delay
+- missing essential document
+- outdated ICF use
+- training inconsistency
+- CRA action item
+
+These are generated by the portfolio application.
+
+The Agent and documentation are designed to keep these sources separate.
+
+---
+
+## Important Limitation
+
+The scenario profile does **not** predict or describe the real-world risk of a ClinicalTrials.gov study.
+
+It only controls which synthetic operational scenario is generated after import.
+
+Therefore, a statement such as:
+
+> "This study is high risk according to ClinicalTrials.gov."
+
+would be incorrect.
+
+The intended interpretation is:
+
+> "This imported study is being used as the study-level context for a synthetic CRA monitoring scenario generated by the portfolio application."
+
+---
+
+## Intended Use
+
+The synthetic dataset is used for:
+
+- application development
+- dashboard demonstrations
+- consistency-check logic
+- risk-scoring demonstration
+- screenshot generation
+- monitoring-report draft generation
+- interview / portfolio explanation
+- repeatable testing
+
+It is not intended for:
+
+- real clinical-trial decision-making
+- site risk prediction
+- patient or subject assessment
+- regulatory submission
+- sponsor oversight
+- production monitoring operations

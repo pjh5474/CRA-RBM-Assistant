@@ -2,61 +2,247 @@
 
 ## CRA-RBM Assistant
 
-CRA-RBM Assistant is a portfolio prototype designed to support Clinical Research Associate monitoring preparation by connecting clinical study information, synthetic site monitoring metrics, risk scoring logic, and CRA follow-up action items.
+CRA-RBM Assistant is a clinical trial monitoring support prototype that connects:
+
+- public ClinicalTrials.gov registry data
+- a cloud data engineering pipeline
+- application-level study search / detail / import
+- synthetic CRA operational scenarios
+- risk-based monitoring workflows
+- clinical trial analytics
+- external AI Agent tools
+
+The project demonstrates how structured data can be transformed into CRA-oriented application workflows without using real patient or confidential sponsor data.
+
+---
 
 ## Purpose
 
-The purpose of this project is to demonstrate how backend development and data quality management experience can be applied to CRA-related workflows such as:
+The project has two connected purposes.
 
-- Protocol review
-- Site Initiation Visit preparation
-- Interim Monitoring Visit preparation
-- Query and deviation follow-up
-- Essential document readiness
-- Risk-based monitoring
+### 1. CRA Workflow Modeling
 
-## MVP Workflow
+Demonstrate how CRA monitoring concepts can be translated into structured software workflows such as:
 
-The MVP workflow is:
+- Study Overview
+- SIV / IMV checklist views
+- site risk review
+- query / deviation follow-up
+- essential document readiness
+- ICF version consistency
+- delegation / training consistency
+- monitoring report draft generation
+- CRA follow-up action items
 
-Sample Study Data
-↓
-Study Overview
-↓
-Generated CRA Checklist
-↓
-Synthetic Site Monitoring Data
-↓
-Risk Score Calculation
-↓
-CRA Follow-up Action Items
+### 2. Data-to-Application Integration
 
-Key Concept:
+Demonstrate how a cloud data platform can feed a real application.
 
-This project does not aim to replace CRA judgment.
-Instead, it demonstrates how clinical trial information and monitoring data can be structured to support CRA review, prioritization, and follow-up planning.
+```text
+ClinicalTrials.gov
+      ↓
+Databricks / Spark / Delta
+      ↓
+Gold + Serving
+      ↓
+BigQuery / dbt + FastAPI
+      ↓
+CRA-RBM Assistant
+      ↓
+CRA Assistant Agent
+```
 
-Data Policy:
+---
 
-This project does not use real patient data, real subject data, or confidential sponsor documents.
+## Current Workflow
 
-All site-level data is synthetic and created only for portfolio and educational purposes.
+### Registry and Import Flow
 
-Planned MVP Features :
+```text
+ClinicalTrials.gov
+      ↓
+Clinical Trials Data Platform
+      ↓
+Databricks Serving Layer
+      ↓
+FastAPI Registry API
+      ↓
+Study Search / Preview
+      ↓
+Authenticated Import
+      ↓
+Supabase Internal Study
+      ↓
+Synthetic Operational Data
+      ↓
+CRA Monitoring Workflow
+```
 
-- Display sample clinical study information
-- Display synthetic site monitoring data
-- Calculate site-level risk score
-- Classify site risk level as Low, Medium, or High
-- Generate CRA-oriented follow-up action items
-- Generate SIV and IMV checklist items
+### Analytics Flow
 
-Future Extensions :
+```text
+Databricks Gold
+      ↓
+BigQuery
+      ↓
+dbt Analytics Mart
+      ↓
+FastAPI
+      ↓
+Clinical Trial Analytics Dashboard
+```
 
-- ClinicalTrials.gov API integration
-- Protocol PDF upload and parsing
-- Protocol amendment comparison
-- ICF version control check
-- Delegation log and training log consistency check
-- n8n-based high-risk site alert workflow
-- LLM-assisted protocol summarization and checklist generation
+### Agent Flow
+
+```text
+CRA Assistant Agent
+      ↓
+searchRegistryStudies / getRegistryStudyDetail
+      ↓
+CRA-RBM FastAPI
+      ↓
+Databricks Serving
+```
+
+---
+
+## Core Features
+
+### Public Registry Search and Detail
+
+- keyword / condition search
+- NCT ID lookup
+- phase / status / country filtering
+- recently updated study ordering
+- study design fields
+- interventions
+- outcomes
+- locations
+- masking / who-masked
+- brief summary
+- eligibility criteria
+
+### Study Import
+
+- authenticated import
+- registry → internal Study mapping
+- Supabase persistence
+- deterministic synthetic scenario generation
+- reuse of existing Study Overview and monitoring workflows
+
+### Clinical Trial Analytics
+
+- trial overview
+- study-type distribution
+- yearly trends
+- country summaries
+- condition trends
+
+### CRA Monitoring Workflows
+
+- SIV / IMV checklist views
+- Risk Dashboard
+- Site Review Hub
+- CRA Action Items
+- Essential Document Readiness
+- Protocol Deviation Tracker
+- ICF Version Control Check
+- Delegation & Training Check
+- Monitoring Report Draft
+- Audit-like Logs
+
+---
+
+## Data Policy
+
+The project separates three data categories.
+
+### Public Registry Data
+
+ClinicalTrials.gov-derived study metadata such as:
+
+- NCT ID
+- title
+- phase
+- status
+- conditions
+- interventions
+- outcomes
+- eligibility criteria
+- locations
+
+### Internal Application Data
+
+Supabase-backed study and workflow state used by CRA-RBM.
+
+### Synthetic Operational Data
+
+Controlled demo data used to illustrate CRA monitoring scenarios.
+
+No real:
+
+- patient data
+- subject data
+- site performance data
+- sponsor-confidential protocol
+- proprietary clinical trial document
+
+is used.
+
+---
+
+## Key Design Principle
+
+The project does not aim to replace CRA judgement.
+
+Instead, it demonstrates how data and software can support:
+
+- review
+- prioritization
+- consistency checking
+- follow-up planning
+- monitoring preparation
+
+Unknown protocol-level operational details are not fabricated from public registry data.
+
+---
+
+## Current Status
+
+Implemented:
+
+- [x] ClinicalTrials.gov full-registry data platform integration
+- [x] Databricks Serving-based Study Search
+- [x] Databricks Serving-based Study Detail
+- [x] Study Import into Supabase
+- [x] Synthetic operational scenario generation
+- [x] Study Overview
+- [x] SIV / IMV checklist views
+- [x] Site Risk Dashboard
+- [x] Site Review Hub
+- [x] CRA Action Items
+- [x] Essential Document Readiness
+- [x] Protocol Deviation Tracker
+- [x] ICF Version Control Check
+- [x] Delegation & Training Check
+- [x] Monitoring Report Draft
+- [x] Audit-like Logs
+- [x] Clinical Trial Analytics Dashboard
+- [x] BigQuery / dbt analytics integration
+- [x] CRA Assistant Agent Registry Search / Detail tools
+
+---
+
+## Related Projects
+
+```text
+Clinical Trials Data Platform
+        ↓
+CRA-RBM Assistant
+        ↓
+CRA Assistant Agent
+```
+
+Together, the projects demonstrate:
+
+> **Public Data → Data Engineering → Application Serving → Domain Workflow → AI Tool Integration**
