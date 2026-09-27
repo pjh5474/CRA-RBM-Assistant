@@ -7,11 +7,9 @@ from pydantic import BaseModel, Field
 class RegistryStudySummaryResponse(BaseModel):
     nctId: str
     title: str
-
     studyType: str | None = None
     phases: list[str] = Field(default_factory=list)
     status: str | None = None
-
     enrollmentCount: int | None = None
 
     startDate: date | None = None
@@ -19,6 +17,7 @@ class RegistryStudySummaryResponse(BaseModel):
 
     conditions: list[str] = Field(default_factory=list)
     countries: list[str] = Field(default_factory=list)
+    interventionNames: list[str] = Field(default_factory=list)
 
     hasResults: bool = False
 
@@ -34,15 +33,16 @@ class RegistryStudySearchResponse(BaseModel):
 class RegistryStudyDetailResponse(RegistryStudySummaryResponse):
     officialTitle: str | None = None
 
-    enrollmentType: str | None = None
+    briefSummary: str | None = None
+    whoMasked: list[str] = Field(default_factory=list)
+    eligibilityCriteria: str | None = None
 
+    enrollmentType: str | None = None
     allocation: str | None = None
     interventionModel: str | None = None
     primaryPurpose: str | None = None
     masking: str | None = None
 
-    interventions: list[dict[str, Any]] = Field(default_factory=list)
-
-    outcomes: list[dict[str, Any]] = Field(default_factory=list)
-
-    locations: list[dict[str, Any]] = Field(default_factory=list)
+    interventions: list[dict] = Field(default_factory=list)
+    outcomes: list[dict] = Field(default_factory=list)
+    locations: list[dict] = Field(default_factory=list)

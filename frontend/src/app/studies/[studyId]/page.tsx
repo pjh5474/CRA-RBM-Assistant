@@ -48,7 +48,9 @@ export default async function StudyDetailPage({
 					/>
 					<InfoCard
 						title="Investigational Product"
-						value={String(study.intervention.investigationalProduct)}
+						value={String(
+							study.intervention.investigationalProduct ?? "Not specified",
+						)}
 					/>
 				</div>
 

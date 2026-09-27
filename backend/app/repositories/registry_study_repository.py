@@ -111,10 +111,13 @@ def search_registry_studies(
             completion_date,
             TO_JSON(conditions) AS conditions_json,
             TO_JSON(countries) AS countries_json,
+            TO_JSON(intervention_names) AS intervention_names_json,
             has_results
         FROM {_table("serving_study_search")}
         WHERE {" AND ".join(conditions)}
-        ORDER BY nct_id
+        ORDER BY
+            last_update_date DESC NULLS LAST,
+            nct_id DESC
         LIMIT {fetch_size}
         OFFSET {offset}
     """
@@ -140,6 +143,7 @@ def search_registry_studies(
             "completionDate": row["completion_date"],
             "conditions": _json_array(row["conditions_json"]),
             "countries": _json_array(row["countries_json"]),
+            "interventionNames": _json_array(row["intervention_names_json"]),
             "hasResults": row["has_results"],
         }
         for row in rows
@@ -165,6 +169,11 @@ def get_registry_study_detail(
             study_type,
             TO_JSON(phases) AS phases_json,
             overall_status,
+
+            brief_summary,
+            TO_JSON(who_masked) AS who_masked_json,
+            eligibility_criteria,
+
             enrollment_count,
             enrollment_type,
             allocation,
@@ -225,6 +234,9 @@ def get_registry_study_detail(
         "studyType": row["study_type"],
         "phases": _json_array(row["phases_json"]),
         "status": row["overall_status"],
+        "briefSummary": row["brief_summary"],
+        "whoMasked": _json_array(row["who_masked_json"]),
+        "eligibilityCriteria": row["eligibility_criteria"],
         "enrollmentCount": row["enrollment_count"],
         "enrollmentType": row["enrollment_type"],
         "allocation": row["allocation"],

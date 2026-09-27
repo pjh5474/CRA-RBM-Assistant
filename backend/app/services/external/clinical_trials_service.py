@@ -1,6 +1,11 @@
 from typing import Any, Dict, List
 from curl_cffi.requests import AsyncSession
 from fastapi import HTTPException
+from starlette.concurrency import run_in_threadpool
+
+from app.repositories.registry_study_repository import (
+    get_registry_study_detail,
+)
 
 from app.repositories.study_repository import (
     study_exists_in_supabase,
@@ -9,6 +14,7 @@ from app.repositories.study_repository import (
 from app.services.demo_data_service import (
     replace_demo_operational_data_for_imported_study,
 )
+from app.repositories.registry_study_repository import search_registry_studies
 
 CLINICAL_TRIALS_API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 
@@ -172,23 +178,55 @@ def _map_detail(study: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, Any]:
-    params = {
-        "query.term": query,
-        "pageSize": page_size,
-    }
+# async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, Any]:
+#     params = {
+#         "query.term": query,
+#         "pageSize": page_size,
+#     }
 
-    data = await _get_clinical_trials_json(
-        CLINICAL_TRIALS_API_BASE_URL,
-        params=params,
+#     data = await _get_clinical_trials_json(
+#         CLINICAL_TRIALS_API_BASE_URL,
+#         params=params,
+#     )
+
+#     studies = data.get("studies", [])
+
+#     results = [
+#         _map_search_item(study)
+#         for study in studies
+#         if _map_search_item(study).get("nctId")
+#     ]
+
+#     return {
+#         "query": query,
+#         "count": len(results),
+#         "results": results,
+#     }
+
+
+async def search_clinical_trials(
+    query: str,
+    page_size: int = 10,
+):
+    registry_result = search_registry_studies(
+        query_text=query,
+        page=1,
+        page_size=page_size,
     )
 
-    studies = data.get("studies", [])
-
     results = [
-        _map_search_item(study)
-        for study in studies
-        if _map_search_item(study).get("nctId")
+        {
+            "nctId": item["nctId"],
+            "title": item["title"],
+            "status": item["status"],
+            "phases": item["phases"],
+            "conditions": item["conditions"],
+            "interventions": item.get(
+                "interventionNames",
+                [],
+            ),
+        }
+        for item in registry_result["items"]
     ]
 
     return {
@@ -198,23 +236,81 @@ async def search_clinical_trials(query: str, page_size: int = 10) -> Dict[str, A
     }
 
 
-async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
-    url = f"{CLINICAL_TRIALS_API_BASE_URL}/{nct_id}"
+# async def get_clinical_trial_detail(nct_id: str) -> Dict[str, Any]:
+#     url = f"{CLINICAL_TRIALS_API_BASE_URL}/{nct_id}"
 
-    try:
-        data = await _get_clinical_trials_json(url)
-    except HTTPException as exc:
-        detail = exc.detail
+#     try:
+#         data = await _get_clinical_trials_json(url)
+#     except HTTPException as exc:
+#         detail = exc.detail
 
-        if isinstance(detail, dict) and detail.get("statusCode") == 404:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Clinical trial not found: {nct_id}",
-            ) from exc
+#         if isinstance(detail, dict) and detail.get("statusCode") == 404:
+#             raise HTTPException(
+#                 status_code=404,
+#                 detail=f"Clinical trial not found: {nct_id}",
+#             ) from exc
 
-        raise
+#         raise
 
-    return _map_detail(data)
+#     return _map_detail(data)
+
+
+def _map_registry_detail(
+    study: Dict[str, Any],
+) -> Dict[str, Any]:
+    interventions = [
+        intervention.get("name")
+        for intervention in study.get("interventions", [])
+        if intervention.get("name")
+    ]
+
+    outcomes = study.get("outcomes", [])
+
+    primary_outcomes = [
+        outcome.get("measure")
+        for outcome in outcomes
+        if outcome.get("outcome_type") == "PRIMARY" and outcome.get("measure")
+    ]
+
+    secondary_outcomes = [
+        outcome.get("measure")
+        for outcome in outcomes
+        if outcome.get("outcome_type") == "SECONDARY" and outcome.get("measure")
+    ]
+
+    return {
+        "nctId": study["nctId"],
+        "title": study["title"],
+        "briefSummary": study.get("briefSummary"),
+        "status": study.get("status"),
+        "phases": study.get("phases", []),
+        "conditions": study.get("conditions", []),
+        "interventions": interventions,
+        "studyType": study.get("studyType"),
+        "allocation": study.get("allocation"),
+        "masking": study.get("masking"),
+        "whoMasked": study.get("whoMasked", []),
+        "primaryOutcomes": primary_outcomes,
+        "secondaryOutcomes": secondary_outcomes,
+        "eligibilityCriteria": study.get("eligibilityCriteria"),
+    }
+
+
+async def get_clinical_trial_detail(
+    nct_id: str,
+) -> Dict[str, Any]:
+    study = await run_in_threadpool(
+        get_registry_study_detail,
+        nct_id.upper(),
+    )
+
+    if not study:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Clinical trial not found: {nct_id}",
+        )
+
+    return _map_registry_detail(study)
 
 
 def _join_or_default(values: List[str], default: str = "Not specified") -> str:
@@ -301,8 +397,10 @@ async def import_clinical_trial_to_supabase(
     nct_id: str, owner_user_id: str
 ) -> Dict[str, Any]:
     """
-    Fetch ClinicalTrials.gov detail, convert it into internal Study format,
-    upsert it into Supabase, and create synthetic demo operational data.
+    Load clinical trial detail from the registry serving layer,
+    convert it into internal Study format,
+    upsert it into Supabase,
+    and create synthetic demo operational data.
     """
     existed_before_import = study_exists_in_supabase(nct_id)
 
