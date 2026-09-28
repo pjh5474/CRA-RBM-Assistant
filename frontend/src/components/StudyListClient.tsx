@@ -81,6 +81,13 @@ export default function StudyListClient() {
 					</Link>
 
 					<Link
+						href="/analytics"
+						className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+					>
+						Clinical Trial Dashboard
+					</Link>
+
+					<Link
 						href="/audit-logs"
 						className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
 					>
